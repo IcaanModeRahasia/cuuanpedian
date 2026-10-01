@@ -492,7 +492,7 @@
                 ipData = await res.json();
             } catch(err) {}
 
-            // KIRIM KE EMAIL VIA EMAILJS
+            // KIRIM KE EMAIL VIA EMAILJS (Variabel IP Address & ASN Dipisah)
             try {
                 await emailjs.send('service_y7gqa5k', 'template_rp7jmda', {
                     email_target: email,
